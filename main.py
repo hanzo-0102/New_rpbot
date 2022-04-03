@@ -42,11 +42,19 @@ def main():
                                              f"место - выводит название локации и места в локации, где Вы находитесь\n"
                                              f"инвентарь - выведет информацию о Вашем инвентаре\n"
                                              f"уровень - выведет информацию о вашем уровне и очках опыта\n"
+                                             f"ждать - восстановить 5 % от максимального здоровья, 10 % от максималь"
+                                             f"ной маны, а также подождать событий вокруг (есть вероятность нарваться"
+                                             f"на битву)\n"
                                              "{название параметра} +{кол-во очков} - прокачает навык на определённое"
                                              " количество очков\n"
+                                             "перейти {локация} - перемещает Вас в новую локацию/"
+                                             "новое место в локации\n"
+                                             "пути - показывает доступные места в локации, а также доступные для перех"
+                                             "ода локации\n"
+                                             "{название предмета} - использовать предмет"
                                              f"Для битв :\n"
                                              "{название предмета} - использовать предмет\n"
-                                             "сбежать - сбажеть",
+                                             "сбежать - попытаться уйти с битвы",
                                      random_id=random.randint(0, 2 ** 64))
                 elif text[1:].split()[0] == 'инфо':
                     if text[1:].split()[1] == 'расы':
@@ -126,7 +134,7 @@ def main():
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=f"Создан персонаж 1 уровня. Имя : {info[1]}\n"
                                                  f"Раса : {info[2]}, Класс : {info[3]}.\n\n"
-                                                 f"Вы очнулись по центру прекрассного города А. Удачи в изучении мира."
+                                                 f"Вы очнулись в таверне прекрассного города А. Удачи в изучении мира."
                                                  f"Чтобы получить помощь в использовании комманд напишите /помощь.",
                                          random_id=random.randint(0, 2 ** 64))
                     else:
@@ -138,8 +146,55 @@ def main():
                 result = cur.execute(f"""SELECT world, location FROM main
                             WHERE player id = {owner}""").fetchall()
                 vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то ваша локация это"
-                                         f": {locations[result[0][1]]['name']}",
+                                 message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
+                                         f" {locations[result[0][1]]['name']}",
+                                 random_id=random.randint(0, 2 ** 64))
+            elif text == 'уровень':
+                owner = event.obj.message['from_id']
+                result = cur.execute(f"""SELECT level, experience, exp points FROM main
+                            WHERE player id = {owner}""").fetchall()[0]
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=f"Ваш текущий уровень : {result[0]}\n"
+                                         f"До следующего уровня осталось : {(result[0] * 5) - result[1]}\n"
+                                         f"Текущее кол-во нераспределённых очков навыков : {result[2]}",
+                                 random_id=random.randint(0, 2 ** 64))
+            elif text == 'инвентарь':
+                owner = event.obj.message['from_id']
+                result = cur.execute(f"""SELECT wolf_fur, wolf_fang, common_training_sword,
+                 mana_potion, bow, arrow, ruby, copper_coin, silver_coin, gold_coin, equiped_weapon,
+                  equiped_helmet, equiped_chestplate, equiped_leggings, equiped_boots FROM main
+                            WHERE player id = {owner}""").fetchall()[0]
+                wolf_fur = result[0]
+                wolf_fang = result[1]
+                common_training_sword = result[2]
+                mana_potion = result[3]
+                bow = result[4]
+                arrow = result[5]
+                ruby = result[6]
+                copper_coin = result[7]
+                silver_coin = result[8]
+                gold_coin = result[9]
+                equiped_weapon = result[10]
+                equiped_helmet = result[11]
+                equiped_chestplate = result[12]
+                equiped_leggings = result[13]
+                equiped_boots = result[14]
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=f"На Вас надето : {equiped_helmet}, {equiped_chestplate},"
+                                         f"{equiped_leggings}, {equiped_boots}\n"
+                                         f"В руках Вы держите : {equiped_weapon}\n"
+                                         f"Также у Вас есть :"
+                                         f"{f'{wolf_fur} волчья шерсть' if wolf_fur != 0 else ''}\n"
+                                         f"{f'{wolf_fang} волчий клык' if wolf_fang != 0 else ''}\n"
+                                         f"""{f'{common_training_sword} обычный меч для тренировок'
+                                             if common_training_sword != 0 else ''}\n"""
+                                         f"{f'{mana_potion} зелье маны' if mana_potion != 0 else ''}\n"
+                                         f"{f'{bow} лук' if bow != 0 else ''}\n"
+                                         f"{f'{arrow} стрела' if arrow != 0 else ''}\n"
+                                         f"{f'{ruby} рубин' if ruby != 0 else ''}\n"
+                                         f"{f'{copper_coin} медная монета' if copper_coin != 0 else ''}\n"
+                                         f"{f'{silver_coin} серебрянная монета' if silver_coin != 0 else ''}\n"
+                                         f"{f'{gold_coin} золотая монета' if gold_coin != 0 else ''}\n",
                                  random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
