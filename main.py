@@ -28,7 +28,7 @@ def main():
             print('Текст:', event.obj.message['text'])
             text = event.obj.message['text']
             vk = vk_session.get_api()
-            if event.obj.message['text'] not in cur.execute("""SELECT player_id FROM main""").fetchall() and text[0] != '/':
+            if event.obj.message['from_id'] not in cur.execute("""SELECT player_id FROM main""").fetchall() and text[0] != '/':
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Приветствую Вас, Соискатель. Вас ожидает интересное приключение в"
                                          f" мире Зельтронии. Я - Ваш проводник. Меня зовут C:\\Users\\...\\main.py, но"
