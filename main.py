@@ -7,13 +7,13 @@ import json
 
 
 def main():
-    with open('world.json') as file:
+    with open('world.json', encoding='utf-8') as file:
         world = json.load(file)
-    with open('npcs.json') as file:
+    with open('npcs.json', encoding='utf-8') as file:
         npcs = json.load(file)
-    with open('mobs.json') as file:
+    with open('mobs.json', encoding='utf-8') as file:
         mobs = json.load(file)
-    with open('locations.json') as file:
+    with open('locations.json', encoding='utf-8') as file:
         locations = json.load(file)
     vk_session = vk_api.VkApi(
         token=TOKEN)
@@ -28,7 +28,7 @@ def main():
             print('Текст:', event.obj.message['text'])
             text = event.obj.message['text']
             vk = vk_session.get_api()
-            if event.obj.message['text'] not in cur.execute("""SELECT player id FROM main""").fetchall() and text[0] != '/':
+            if event.obj.message['text'] not in cur.execute("""SELECT player_id FROM main""").fetchall() and text[0] != '/':
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Приветствую Вас, Соискатель. Вас ожидает интересное приключение в"
                                          f" мире Зельтронии. Я - Ваш проводник. Меня зовут C:\\Users\\...\\main.py, но"
@@ -128,17 +128,25 @@ def main():
                         }
                     }
                     if info[2].lower() in ['орк', 'дварф', 'человек', 'эльф'] and info[3].lower() in ['воин']:
-                        cur.execute(f'''INSERT INTO main VALUES ({event.obj.message['text']}
-                        1, 0, {2 * min(1, races[info[2].lower()]['CON'] + classes[info[3].lower()]['CON'])}
-                        , {2 * min(1, races[info[2].lower()]['WIS'] + classes[info[3].lower()]['WIS'])},
-                         {min(1, races[info[2].lower()]['STR'] + classes[info[3].lower()]['STR'])},
-                         {min(1, races[info[2].lower()]['DEX'] + classes[info[3].lower()]['DEX'])},
-                         {min(1, races[info[2].lower()]['WIS'] + classes[info[3].lower()]['WIS'])},
-                         {min(1, races[info[2].lower()]['CON'] + classes[info[3].lower()]['CON'])},
-                         {min(1, races[info[2].lower()]['INT'] + classes[info[3].lower()]['INT'])},
-                         {min(1, races[info[2].lower()]['CHA'] + classes[info[3].lower()]['CHA'])},
-                         {info[2].lower()}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {info[1]}, '', '', '', '', '', 'spawn',
-                          'tavernspawn', 0, 'idle', '', 'story0')''')
+                        cur.execute(f'''INSERT INTO main(player_id,
+                        level, experience, health, mana, STR, DEX, WIS, CON, INT, CHA,
+                        RACE, wolf_fur, wolf_fang, common_training_sword, mana_potion,
+                        bow, arrow, ruby, copper_coin, silver_coin, gold_coin, NAME,
+                        equiped_weapon, equiped_helmet, equiped_chestplate, eqiped_leggings,
+                         equiped_boots, world, location, exp_points, mode,
+                         queue, quests) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (int(event.obj.message['from_id']),
+                        1, 0, 2 * min(1, races[info[2].lower()]['CON'] + classes[info[3].lower()]['CON']),
+                        2 * min(1, races[info[2].lower()]['WIS'] + classes[info[3].lower()]['WIS']),
+                         min(1, races[info[2].lower()]['STR'] + classes[info[3].lower()]['STR']),
+                         min(1, races[info[2].lower()]['DEX'] + classes[info[3].lower()]['DEX']),
+                         min(1, races[info[2].lower()]['WIS'] + classes[info[3].lower()]['WIS']),
+                         min(1, races[info[2].lower()]['CON'] + classes[info[3].lower()]['CON']),
+                         min(1, races[info[2].lower()]['INT'] + classes[info[3].lower()]['INT']),
+                         min(1, races[info[2].lower()]['CHA'] + classes[info[3].lower()]['CHA']),
+                         info[2].lower(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, info[1], '', '', '', '', '', 'spawn',
+                          'tavernspawn', 0, 'idle', '', 'story0'))
+                        con.commit()
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=f"Создан персонаж 1 уровня. Имя : {info[1]}\n"
                                                  f"Раса : {info[2]}, Класс : {info[3]}.\n\n"
@@ -159,7 +167,7 @@ def main():
                                  random_id=random.randint(0, 2 ** 64))
             elif text == 'уровень':
                 owner = event.obj.message['from_id']
-                result = cur.execute(f"""SELECT level, experience, exp points FROM main
+                result = cur.execute(f"""SELECT level, experience, exp_points FROM main
                             WHERE player id = {owner}""").fetchall()[0]
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Ваш текущий уровень : {result[0]}\n"
@@ -170,7 +178,7 @@ def main():
                 owner = event.obj.message['from_id']
                 result = cur.execute(f"""SELECT wolf_fur, wolf_fang, common_training_sword,
                  mana_potion, bow, arrow, ruby, copper_coin, silver_coin, gold_coin, equiped_weapon,
-                  equiped_helmet, equiped_chestplate, equiped_leggings, equiped_boots FROM main
+                  equiped_helmet, equiped_chestplate, eqiped_leggings, equiped_boots FROM main
                             WHERE player id = {owner}""").fetchall()[0]
                 wolf_fur = result[0]
                 wolf_fang = result[1]
