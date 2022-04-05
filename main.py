@@ -7,10 +7,14 @@ import json
 
 
 def main():
-    world = json.load('world.json')
-    npcs = json.load('npcs.json')
-    mobs = json.load('mobs.json')
-    locations = json.load('locations.json')
+    with open('world.json') as file:
+        world = json.load(file)
+    with open('npcs.json') as file:
+        npcs = json.load(file)
+    with open('mobs.json') as file:
+        mobs = json.load(file)
+    with open('locations.json') as file:
+        locations = json.load(file)
     vk_session = vk_api.VkApi(
         token=TOKEN)
     longpoll = VkBotLongPoll(vk_session, id_сообщества)
