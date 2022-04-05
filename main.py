@@ -31,7 +31,7 @@ def main():
             if (str(event.obj.message['from_id']),) not in cur.execute("""SELECT player_id FROM main""").fetchall() and text[0] != '/':
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Приветствую Вас, Соискатель. Вас ожидает интересное приключение в"
-                                         f" мире Зельтронии. Я - Ваш проводник. Меня зовут C:\\Users\\...\\main.py, но"
+                                         f" мире Зельтронии. Я - Ваш проводник. Меня зовут C:\\Users\\...\\main.py, но "
                                          f"Вы можете звать меня Консуас. Для начала предлагаю Вам создать персонажа. Дл"
                                          f"я"
                                          "этого напишите в чат /создать {имя вашего персонажа} {раса персонажа} {класс "
@@ -49,6 +49,7 @@ def main():
                                              f"ждать - восстановить 5 % от максимального здоровья, 10 % от максималь"
                                              f"ной маны, а также подождать событий вокруг (есть вероятность нарваться"
                                              f"на битву)\n"
+                                             f"здоровье - выводит параметры здоровье и маны у игрока\n"
                                              "{название параметра} +{кол-во очков} - прокачает навык на определённое"
                                              " количество очков\n"
                                              "квесты - выводит список квестов"
@@ -75,6 +76,8 @@ def main():
                     elif text[1:].split()[1] == 'классы':
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=f"Воин : 7 СИЛЫ, 6 ВЫНОСЛИВОСТИ, 5 ЛОВКОСТИ, 4 МУДРОСТИ, 3 ИНТЕЛЛЕКТА,"
+                                                 f"5 ХАРИЗМЫ\n"
+                                                 f"Чародей : 3 СИЛЫ, 4 ВЫНОСЛИВОСТИ, 3 ЛОВКОСТИ, 7 МУДРОСТИ, 8 ИНТЕЛЛЕКТА,"
                                                  f"5 ХАРИЗМЫ",
                                          random_id=random.randint(0, 2 ** 64))
                     else:
@@ -91,6 +94,14 @@ def main():
                             "WIS" : 4,
                             "INT" : 3,
                             "CHA" : 5
+                        },
+                        "чародей": {
+                            "STR": 3,
+                            "CON": 4,
+                            "DEX": 3,
+                            "WIS": 7,
+                            "INT": 8,
+                            "CHA": 5
                         }
                     }
                     races = {
@@ -127,7 +138,7 @@ def main():
                             "CHA": 0
                         }
                     }
-                    if info[2].lower() in ['орк', 'дварф', 'человек', 'эльф'] and info[3].lower() in ['воин']:
+                    if info[2].lower() in ['орк', 'дварф', 'человек', 'эльф'] and info[3].lower() in ['воин', 'чародей']:
                         cur.execute(f'''INSERT INTO main(player_id,
                         level, experience, health, mana, STR, DEX, WIS, CON, INT, CHA,
                         RACE, wolf_fur, wolf_fang, common_training_sword, mana_potion,
@@ -164,6 +175,14 @@ def main():
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
                                          f" {locations[result[0][1]]['name']}",
+                                 random_id=random.randint(0, 2 ** 64))
+            elif text == 'здоровье':
+                owner = event.obj.message['from_id']
+                result = cur.execute(f"""SELECT health, mana, CON, WIS FROM main
+                            WHERE player_id = {owner}""").fetchall()[0]
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=f"У Вас {result[0][0]}/{result[0][3] * 2} здоровья\n"
+                                         f"У Вас {result[0][1]}/{result[0][4] * 2} маны",
                                  random_id=random.randint(0, 2 ** 64))
             elif text == 'уровень':
                 owner = event.obj.message['from_id']
@@ -212,6 +231,48 @@ def main():
                                          f"{f'{silver_coin} серебрянная монета' if silver_coin != 0 else ''}\n"
                                          f"{f'{gold_coin} золотая монета' if gold_coin != 0 else ''}\n",
                                  random_id=random.randint(0, 2 ** 64))
+            elif text.split()[0] == 'перейти':
+                to = ' '.join(text.split()[1:])
+                x = {}
+                for i in locations.keys():
+                    x[locations[i]['name']] = i
+                for i in world.keys():
+                    x[world[i]['name']] = i
+                if to in x.keys():
+                    to1 = x[to]
+                    owner = event.obj.message['from_id']
+                    result = cur.execute(f"""SELECT world, location FROM main
+                                                WHERE player_id = {owner}""").fetchall()[0]
+                    if to1 in world[result[0]]['locations']:
+                        cur.execute(f"""UPDATE main
+                                        SET location = ?
+                                        WHERE player_id = ?""", (to1, owner))
+                        con.commit()
+                        result = cur.execute(f"""SELECT world, location FROM main
+                                                    WHERE player_id = {owner}""").fetchall()
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
+                                                 f" {locations[result[0][1]]['name']}",
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif to1 in world[result[0]]['paths']:
+                        cur.execute(f"""UPDATE main
+                                        SET world = ?
+                                        WHERE player_id = ?""", (to1, owner))
+                        con.commit()
+                        result = cur.execute(f"""SELECT world, location FROM main
+                                                                            WHERE player_id = {owner}""").fetchall()
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
+                                                 f" {locations[result[0][1]]['name']}",
+                                         random_id=random.randint(0, 2 ** 64))
+                    else:
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Отсюда туда добраться нельзя... Попробуй другое место.",
+                                         random_id=random.randint(0, 2 ** 64))
+                else:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Я не знаю такого места :(",
+                                     random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Я вас не понимаю...",
