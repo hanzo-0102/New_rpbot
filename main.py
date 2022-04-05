@@ -28,7 +28,7 @@ def main():
             print('Текст:', event.obj.message['text'])
             text = event.obj.message['text']
             vk = vk_session.get_api()
-            if event.obj.message['from_id'] not in cur.execute("""SELECT player_id FROM main""").fetchall() and text[0] != '/':
+            if (str(event.obj.message['from_id']),) not in cur.execute("""SELECT player_id FROM main""").fetchall() and text[0] != '/':
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Приветствую Вас, Соискатель. Вас ожидает интересное приключение в"
                                          f" мире Зельтронии. Я - Ваш проводник. Меня зовут C:\\Users\\...\\main.py, но"
@@ -160,7 +160,7 @@ def main():
             elif text == 'место':
                 owner = event.obj.message['from_id']
                 result = cur.execute(f"""SELECT world, location FROM main
-                            WHERE player id = {owner}""").fetchall()
+                            WHERE player_id = {owner}""").fetchall()
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
                                          f" {locations[result[0][1]]['name']}",
@@ -168,7 +168,7 @@ def main():
             elif text == 'уровень':
                 owner = event.obj.message['from_id']
                 result = cur.execute(f"""SELECT level, experience, exp_points FROM main
-                            WHERE player id = {owner}""").fetchall()[0]
+                            WHERE player_id = {owner}""").fetchall()[0]
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Ваш текущий уровень : {result[0]}\n"
                                          f"До следующего уровня осталось : {(result[0] * 5) - result[1]}\n"
@@ -179,7 +179,7 @@ def main():
                 result = cur.execute(f"""SELECT wolf_fur, wolf_fang, common_training_sword,
                  mana_potion, bow, arrow, ruby, copper_coin, silver_coin, gold_coin, equiped_weapon,
                   equiped_helmet, equiped_chestplate, eqiped_leggings, equiped_boots FROM main
-                            WHERE player id = {owner}""").fetchall()[0]
+                            WHERE player_id = {owner}""").fetchall()[0]
                 wolf_fur = result[0]
                 wolf_fang = result[1]
                 common_training_sword = result[2]
