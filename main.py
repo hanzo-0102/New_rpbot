@@ -4,6 +4,7 @@ import random
 import datetime
 import sqlite3
 import json
+from secrets import TOKEN, group_id
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
         locations = json.load(file)
     vk_session = vk_api.VkApi(
         token=TOKEN)
-    longpoll = VkBotLongPoll(vk_session, id_сообщества)
+    longpoll = VkBotLongPoll(vk_session, group_id)
     con = sqlite3.connect("db_session.db")
     cur = con.cursor()
     for event in longpoll.listen():
@@ -245,10 +246,10 @@ def main():
                 for i in quests.keys():
                     for item in ['name', 'text', 'target']:
                         message += f"{item}: {quests[i][item]}\n"
-                    f += '\n'
-                    vk.message.send(user_id=event.obj.message['from_id'],
-                                    message=f"Вам доступны квесты",
-                                    random_id=random.randint(0, 2 ** 64))
+                    message += '\n'
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Вам доступны квесты: {message}",
+                                     random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Я вас не понимаю...",
