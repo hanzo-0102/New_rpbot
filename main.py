@@ -240,15 +240,20 @@ def main():
                                  random_id=random.randint(0, 2 ** 64))
             elif text == 'квесты':
                 message = ''
-                with open('quests.json') as f:
+                owner = event.obj.message['from_id']
+                result = cur.execute(f"""SELECT quests FROM main
+                                                                WHERE player_id = {owner}""").fetchall()[0]
+                with open('quests.json', encoding='utf-8') as f:
                     quests = json.load(f)
-                for i in quests.keys():
-                    for item in ['name', 'text', 'target']:
-                        message += f"{item}: {quests[i][item]}\n"
-                    f += '\n'
-                    vk.message.send(user_id=event.obj.message['from_id'],
-                                    message=f"Вам доступны квесты",
-                                    random_id=random.randint(0, 2 ** 64))
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=f"Вам доступны квесты :\n",
+                                 random_id=random.randint(0, 2 ** 64))
+                for i in result:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Название : {quests[i]['name']}\n"
+                                            f"Описание : {quests[i]['text']}\n"
+                                            f"Цель : {quests[i]['target']}",
+                                     random_id=random.randint(0, 2 ** 64))
             elif text.split()[0] == 'перейти':
                 to = ' '.join(text.split()[1:])
                 x = {}
