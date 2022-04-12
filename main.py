@@ -276,6 +276,11 @@ def main():
                         cur.execute(f"""UPDATE main
                                         SET world = ?
                                         WHERE player_id = ?""", (to1, owner))
+                        to2 = world[to1]['locations'][0]
+                        con.commit()
+                        cur.execute(f"""UPDATE main
+                                        SET location = ?
+                                        WHERE player_id = ?""", (to2, owner))
                         con.commit()
                         result = cur.execute(f"""SELECT world, location FROM main
                                                                             WHERE player_id = {owner}""").fetchall()
