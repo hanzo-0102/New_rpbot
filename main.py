@@ -16,8 +16,8 @@ def main():
     with open('locations.json', encoding='utf-8') as file:
         locations = json.load(file)
     vk_session = vk_api.VkApi(
-        token=TOKEN)
-    longpoll = VkBotLongPoll(vk_session, id_сообщества)
+        token='50f9dff39373368d994a39535633bc4794c7d7cc3777c2562940b5d59ed3e9fc67c82cd0dce2ef0d775b4')
+    longpoll = VkBotLongPoll(vk_session, '212262401')
     con = sqlite3.connect("db_session.db")
     cur = con.cursor()
     for event in longpoll.listen():
@@ -249,6 +249,48 @@ def main():
                     vk.message.send(user_id=event.obj.message['from_id'],
                                     message=f"Вам доступны квесты",
                                     random_id=random.randint(0, 2 ** 64))
+            elif text.split()[0] == 'перейти':
+                to = ' '.join(text.split()[1:])
+                x = {}
+                for i in locations.keys():
+                    x[locations[i]['name']] = i
+                for i in world.keys():
+                    x[world[i]['name']] = i
+                if to in x.keys():
+                    to1 = x[to]
+                    owner = event.obj.message['from_id']
+                    result = cur.execute(f"""SELECT world, location FROM main
+                                                WHERE player_id = {owner}""").fetchall()[0]
+                    if to1 in world[result[0]]['locations']:
+                        cur.execute(f"""UPDATE main
+                                        SET location = ?
+                                        WHERE player_id = ?""", (to1, owner))
+                        con.commit()
+                        result = cur.execute(f"""SELECT world, location FROM main
+                                                    WHERE player_id = {owner}""").fetchall()
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
+                                                 f" {locations[result[0][1]]['name']}",
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif to1 in world[result[0]]['paths']:
+                        cur.execute(f"""UPDATE main
+                                        SET world = ?
+                                        WHERE player_id = ?""", (to1, owner))
+                        con.commit()
+                        result = cur.execute(f"""SELECT world, location FROM main
+                                                                            WHERE player_id = {owner}""").fetchall()
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
+                                                 f" {locations[result[0][1]]['name']}",
+                                         random_id=random.randint(0, 2 ** 64))
+                    else:
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Отсюда туда добраться нельзя... Попробуй другое место.",
+                                         random_id=random.randint(0, 2 ** 64))
+                else:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Я не знаю такого места :(",
+                                     random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Я вас не понимаю...",
