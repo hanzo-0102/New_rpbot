@@ -16,8 +16,8 @@ def main():
     with open('locations.json', encoding='utf-8') as file:
         locations = json.load(file)
     vk_session = vk_api.VkApi(
-        token='50f9dff39373368d994a39535633bc4794c7d7cc3777c2562940b5d59ed3e9fc67c82cd0dce2ef0d775b4')
-    longpoll = VkBotLongPoll(vk_session, '212262401')
+        token=TOKEN)
+    longpoll = VkBotLongPoll(vk_session, id_сообщества)
     con = sqlite3.connect("db_session.db")
     cur = con.cursor()
     for event in longpoll.listen():
