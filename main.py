@@ -246,7 +246,7 @@ def main():
                     for item in ['name', 'text', 'target']:
                         message += f"{item}: {quests[i][item]}\n"
                     f += '\n'
-                    vk.message.send(user_id=event.obj.message['from_id'],
+                    vk.messages.send(user_id=event.obj.message['from_id'],
                                     message=f"Вам доступны квесты",
                                     random_id=random.randint(0, 2 ** 64))
             elif text.split()[0] == 'перейти':
