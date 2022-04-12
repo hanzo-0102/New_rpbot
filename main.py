@@ -203,6 +203,28 @@ def main():
                                  message=f"Вы можете перейти в {', '.join(canto)}.\n"
                                          f"А также вы можете попасть в {', '.join(canto1)}.",
                                  random_id=random.randint(0, 2 ** 64))
+            elif text == "торговля":
+                owner = event.obj.message['from_id']
+                result = cur.execute(f"""SELECT location FROM main
+                                            WHERE player_id = {owner}""").fetchall()[0][0]
+                level = cur.execute(f"""SELECT level FROM main
+                                            WHERE player_id = {owner}""").fetchall()[0][0]
+                if not locations[result]['trade']:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Торговцев здесь нет... Эх :(",
+                                     random_id=random.randint(0, 2 ** 64))
+                else:
+                    trades = locations[result]['trade_list']
+                    number = 1
+                    for i in trades.keys():
+                        if int(i) < level:
+                            for j in trades[i]:
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"Сделка номер {number} :"
+                                                         f" Вы отдадите {j['give_count']} {j['give']}, а получите"
+                                                         f" {j['got_count']} {j['got']}",
+                                                 random_id=random.randint(0, 2 ** 64))
+                                number += 1
             elif text == 'уровень':
                 owner = event.obj.message['from_id']
                 result = cur.execute(f"""SELECT level, experience, exp_points FROM main
@@ -237,7 +259,7 @@ def main():
                                  message=f"На Вас надето : {equiped_helmet}, {equiped_chestplate},"
                                          f"{equiped_leggings}, {equiped_boots}\n"
                                          f"В руках Вы держите : {equiped_weapon}\n"
-                                         f"Также у Вас есть :"
+                                         f"Также у Вас есть :\n"
                                          f"{f'{wolf_fur} волчья шерсть' if wolf_fur != 0 else ''}\n"
                                          f"{f'{wolf_fang} волчий клык' if wolf_fang != 0 else ''}\n"
                                          f"""{f'{common_training_sword} обычный меч для тренировок'
@@ -266,6 +288,46 @@ def main():
                                             f"Описание : {quests[i]['text']}\n"
                                             f"Цель : {quests[i]['target']}",
                                      random_id=random.randint(0, 2 ** 64))
+            elif text.split()[0] == "торговать":
+                totrade = int(text.split()[1])
+                owner = event.obj.message['from_id']
+                result = cur.execute(f"""SELECT location FROM main
+                                            WHERE player_id = {owner}""").fetchall()[0][0]
+                level = cur.execute(f"""SELECT level FROM main
+                                            WHERE player_id = {owner}""").fetchall()[0][0]
+                if not locations[result]['trade']:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Торговцев здесь нет... Эх :(",
+                                     random_id=random.randint(0, 2 ** 64))
+                else:
+                    trades = locations[result]['trade_list']
+                    number = 1
+                    for i in trades.keys():
+                        if int(i) < level:
+                            for j in trades[i]:
+                                if number == totrade:
+                                    give = cur.execute(f"""SELECT {j['give']} FROM main
+                                                            WHERE player_id = {owner}""").fetchall()[0][0]
+                                    got = cur.execute(f"""SELECT {j['got']} FROM main
+                                                            WHERE player_id = {owner}""").fetchall()[0][0]
+                                    if give >= j['give_count']:
+                                        cur.execute(f"""UPDATE main
+                                                        SET {j['give']} = ?
+                                                        WHERE player_id = ?""", (give - j['give_count'], owner))
+                                        con.commit()
+                                        cur.execute(f"""UPDATE main
+                                                        SET {j['got']} = ?
+                                                        WHERE player_id = ?""", (got + j['got_count'], owner))
+                                        con.commit()
+                                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                                         message="Сделка прошла успешно !",
+                                                         random_id=random.randint(0, 2 ** 64))
+                                    else :
+                                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                                         message="Торговец : У тебя нет материалов, а я в благородства"
+                                                                 " играть не буду...",
+                                                         random_id=random.randint(0, 2 ** 64))
+                                number += 1
             elif text.split()[0] == 'перейти':
                 to = ' '.join(text.split()[1:])
                 x = {}
