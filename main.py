@@ -28,7 +28,8 @@ def main():
             print('Текст:', event.obj.message['text'])
             text = event.obj.message['text']
             vk = vk_session.get_api()
-            if (str(event.obj.message['from_id']),) not in cur.execute("""SELECT player_id FROM main""").fetchall() and text[0] != '/':
+            if (str(event.obj.message['from_id']),) not in cur.execute("""SELECT player_id FROM main""").fetchall() and \
+                    text[0] != '/':
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Приветствую Вас, Соискатель. Вас ожидает интересное приключение в"
                                          f" мире Зельтронии. Я - Ваш проводник. Меня зовут C:\\Users\\...\\main.py, но"
@@ -84,17 +85,17 @@ def main():
                 elif text[1:].split()[0] == 'создать':
                     info = text[1:].split()
                     classes = {
-                        "воин" : {
-                            "STR" : 7,
-                            "CON" : 6,
-                            "DEX" : 5,
-                            "WIS" : 4,
-                            "INT" : 3,
-                            "CHA" : 5
+                        "воин": {
+                            "STR": 7,
+                            "CON": 6,
+                            "DEX": 5,
+                            "WIS": 4,
+                            "INT": 3,
+                            "CHA": 5
                         }
                     }
                     races = {
-                        "орк" : {
+                        "орк": {
                             "STR": 0,
                             "CON": 2,
                             "DEX": -1,
@@ -136,16 +137,41 @@ def main():
                          equiped_boots, world, location, exp_points, mode,
                          queue, quests) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
                          ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (int(event.obj.message['from_id']),
-                        1, 0, 2 * max(1, races[info[2].lower()]['CON'] + classes[info[3].lower()]['CON']),
-                        2 * max(1, races[info[2].lower()]['WIS'] + classes[info[3].lower()]['WIS']),
-                         max(1, races[info[2].lower()]['STR'] + classes[info[3].lower()]['STR']),
-                         max(1, races[info[2].lower()]['DEX'] + classes[info[3].lower()]['DEX']),
-                         max(1, races[info[2].lower()]['WIS'] + classes[info[3].lower()]['WIS']),
-                         max(1, races[info[2].lower()]['CON'] + classes[info[3].lower()]['CON']),
-                         max(1, races[info[2].lower()]['INT'] + classes[info[3].lower()]['INT']),
-                         max(1, races[info[2].lower()]['CHA'] + classes[info[3].lower()]['CHA']),
-                         info[2].lower(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, info[1], '', '', '', '', '', 'spawn',
-                          'tavernspawn', 0, 'idle', '', 'story0'))
+                                                                                    1, 0, 2 * max(1, races[
+                            info[2].lower()]['CON'] + classes[info[3].lower()]['CON']),
+                                                                                    2 * max(1, races[info[2].lower()][
+                                                                                        'WIS'] +
+                                                                                            classes[info[3].lower()][
+                                                                                                'WIS']),
+                                                                                    max(1,
+                                                                                        races[info[2].lower()]['STR'] +
+                                                                                        classes[info[3].lower()][
+                                                                                            'STR']),
+                                                                                    max(1,
+                                                                                        races[info[2].lower()]['DEX'] +
+                                                                                        classes[info[3].lower()][
+                                                                                            'DEX']),
+                                                                                    max(1,
+                                                                                        races[info[2].lower()]['WIS'] +
+                                                                                        classes[info[3].lower()][
+                                                                                            'WIS']),
+                                                                                    max(1,
+                                                                                        races[info[2].lower()]['CON'] +
+                                                                                        classes[info[3].lower()][
+                                                                                            'CON']),
+                                                                                    max(1,
+                                                                                        races[info[2].lower()]['INT'] +
+                                                                                        classes[info[3].lower()][
+                                                                                            'INT']),
+                                                                                    max(1,
+                                                                                        races[info[2].lower()]['CHA'] +
+                                                                                        classes[info[3].lower()][
+                                                                                            'CHA']),
+                                                                                    info[2].lower(), 0, 0, 0, 0, 0, 0,
+                                                                                    0, 0, 0, 0, info[1], '', '', '', '',
+                                                                                    '', 'spawn',
+                                                                                    'tavernspawn', 0, 'idle', '',
+                                                                                    'story0'))
                         con.commit()
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=f"Создан персонаж 1 уровня. Имя : {info[1]}\n"
@@ -203,7 +229,7 @@ def main():
                                          f"{f'{wolf_fur} волчья шерсть' if wolf_fur != 0 else ''}\n"
                                          f"{f'{wolf_fang} волчий клык' if wolf_fang != 0 else ''}\n"
                                          f"""{f'{common_training_sword} обычный меч для тренировок'
-                                             if common_training_sword != 0 else ''}\n"""
+                                         if common_training_sword != 0 else ''}\n"""
                                          f"{f'{mana_potion} зелье маны' if mana_potion != 0 else ''}\n"
                                          f"{f'{bow} лук' if bow != 0 else ''}\n"
                                          f"{f'{arrow} стрела' if arrow != 0 else ''}\n"
@@ -212,12 +238,22 @@ def main():
                                          f"{f'{silver_coin} серебрянная монета' if silver_coin != 0 else ''}\n"
                                          f"{f'{gold_coin} золотая монета' if gold_coin != 0 else ''}\n",
                                  random_id=random.randint(0, 2 ** 64))
+            elif text == 'квесты':
+                message = ''
+                with open('quests.json') as f:
+                    quests = json.load(f)
+                for i in quests.keys():
+                    for item in ['name', 'text', 'target']:
+                        message += f"{item}: {quests[i][item]}\n"
+                    f += '\n'
+                    vk.message.send(user_id=event.obj.message['from_id'],
+                                    message=f"Вам доступны квесты",
+                                    random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Я вас не понимаю...",
                                  random_id=random.randint(0, 2 ** 64))
     con.close()
-
 
 
 if __name__ == '__main__':
