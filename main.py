@@ -246,10 +246,10 @@ def main():
                 for i in quests.keys():
                     for item in ['name', 'text', 'target']:
                         message += f"{item}: {quests[i][item]}\n"
-                    f += '\n'
-                    vk.messages.send(user_id=event.obj.message['from_id'],
-                                    message=f"Вам доступны квесты",
-                                    random_id=random.randint(0, 2 ** 64))
+                    message += '\n'
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=f"Вам доступны квесты: {message}",
+                                 random_id=random.randint(0, 2 ** 64))
             elif text.split()[0] == 'перейти':
                 to = ' '.join(text.split()[1:])
                 x = {}
@@ -297,9 +297,34 @@ def main():
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=f"Я не знаю такого места :(",
                                      random_id=random.randint(0, 2 ** 64))
+            elif text == "сбежать":
+                pass
+            elif text == "враги":
+                message = ''
+                with open('mobs.json') as f:
+                    mobs = json.load(f)
+                for i in mobs.keys():
+                    message += f"{mobs[i]['name']}, health: {mobs[i]['health']}\n"
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=f"Текущие враги:\n {message}",
+                                 random_id=random.randint(0, 2 ** 64))
+            elif ("battle",) in cur.execute(
+                    f"""SELECT mode FROM main WHERE player_id = {event.obj.message['from_id']}""").fetchall():
+                with open("Weapons.json") as f:
+                    weapons = json.load(f)
+                temp = list(weapons.keys())
+                for i in range(len(temp)):
+                    temp[i] = weapons[temp[i]]['name']
+                if text in temp:
+                    cur.execute(f"""UPDATE main
+                                    SET equiped_weapon = ?
+                                    WHERE player_id = ?""", (text, event.obj.message['from_id'])).fetchall()
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f'Вы выбрали на вооружение {cur.execute(f"""SELECT equiped_weapon FROM main WHERE player_id = {event.obj.message["from_id"]}""").fetchall()}',
+                                     random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=f"Я вас не понимаю...",
+                                 message=f"""Я вас не понимаю...""",
                                  random_id=random.randint(0, 2 ** 64))
     con.close()
 

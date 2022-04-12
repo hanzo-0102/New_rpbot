@@ -1,0 +1,24 @@
+{
+  "Fist": {
+    "name": "Кулак",
+    "Attack power": 1,
+    "need": {"STR": 1,
+            "DEX": 1,
+            "WIS": 1,
+            "CON": 1,
+            "INT": 1,
+            "CHA":  1}
+  },
+  "Jigsaw": {
+    "name": "Лобзик",
+    "Attack power": 1,
+    "need": {
+      "STR": 1000,
+      "DEX": 1000,
+      "WIS": 1000,
+      "CON": 1000,
+      "INT": 1000,
+      "CHA": 1000
+    }
+  }
+}
