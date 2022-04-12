@@ -16,8 +16,8 @@ def main():
     with open('locations.json', encoding='utf-8') as file:
         locations = json.load(file)
     vk_session = vk_api.VkApi(
-        token=TOKEN)
-    longpoll = VkBotLongPoll(vk_session, id_сообщества)
+        token='50f9dff39373368d994a39535633bc4794c7d7cc3777c2562940b5d59ed3e9fc67c82cd0dce2ef0d775b4')
+    longpoll = VkBotLongPoll(vk_session, '212262401')
     con = sqlite3.connect("db_session.db")
     cur = con.cursor()
     for event in longpoll.listen():
@@ -55,6 +55,8 @@ def main():
                                              "квесты - выводит список квестов"
                                              "перейти {локация} - перемещает Вас в новую локацию/"
                                              "новое место в локации\n"
+                                             "торговля - выводит список торговли если возможно\n"
+                                             "торговать {номер} - обменивает предметы по сделке с выбранным номером\n"
                                              "пути - показывает доступные места в локации, а также доступные для перех"
                                              "ода локации\n"
                                              "{название предмета} - использовать предмет\n"
@@ -190,6 +192,16 @@ def main():
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
                                          f" {locations[result[0][1]]['name']}",
+                                 random_id=random.randint(0, 2 ** 64))
+            elif text == 'пути':
+                owner = event.obj.message['from_id']
+                result = cur.execute(f"""SELECT world FROM main
+                            WHERE player_id = {owner}""").fetchall()
+                canto = [world[i]['name'] for i in world[result[0][0]]['paths']]
+                canto1 = [locations[i]['name'] for i in world[result[0][0]]['locations']]
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=f"Вы можете перейти в {', '.join(canto)}.\n"
+                                         f"А также вы можете попасть в {', '.join(canto1)}.",
                                  random_id=random.randint(0, 2 ** 64))
             elif text == 'уровень':
                 owner = event.obj.message['from_id']
