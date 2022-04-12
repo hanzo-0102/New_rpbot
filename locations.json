@@ -1,0 +1,105 @@
+{
+  "magicshopspawn" : {
+    "name" : "магазин магических безделушек мистера Ериаса",
+    "trade" : true,
+    "trade_list" : {
+      "0" : [{
+        "give" : "wolf_fur",
+        "give_count" : 5,
+        "got" : "ruby",
+        "got_count" : 1
+      },
+        {
+        "give" : "ruby",
+        "give_count" : 7,
+        "got" : "mana_potion",
+        "got_count" : 1
+      }],
+      "1" : [{
+        "give" : "wolf_fang",
+        "give_count" : 1,
+        "got" : "ruby",
+        "got_count" : 3
+      }]
+    }
+  },
+  "weaponshopspawn" : {
+    "name" : "кузня старого мастера Килвара",
+    "trade" : true,
+    "trade_list" : {
+      "0" : [{
+        "give" : "ruby",
+        "give_count" : 3,
+        "got" : "common_training_sword",
+        "got_count" : 1
+      }],
+      "1" : [{
+        "give" : "ruby",
+        "give_count" : 15,
+        "got" : "bow",
+        "got_count" : 1
+      },
+        {
+        "give" : "ruby",
+        "give_count" : 1,
+        "got" : "arrow",
+        "got_count" : 3
+      }]
+    }
+  },
+  "tavernspawn" : {
+    "name" : "таверна 'Красный дракон'",
+    "trade" : true,
+    "trade_list" : {
+      "0" : [{
+        "give" : "copper_coin",
+        "give_count" : 3,
+        "got" : "silver_coin",
+        "got_count" : 1
+      },
+        {
+        "give" : "silver_coin",
+        "give_count" : 5,
+        "got" : "gold_coin",
+        "got_count" : 1
+      },
+        {
+        "give" : "gold_coin",
+        "give_count" : 7,
+        "got" : "ruby",
+        "got_count" : 1
+      },
+        {
+        "give" : "silver_coin",
+        "give_count" : 1,
+        "got" : "copper_coin",
+        "got_count" : 3
+      },
+        {
+        "give" : "gold_coin",
+        "give_count" : 1,
+        "got" : "silver_coin",
+        "got_count" : 5
+      },
+        {
+        "give" : "ruby",
+        "give_count" : 1,
+        "got" : "gold_coin",
+        "got_count" : 7
+      }
+      ]
+    }
+  },
+  "wolfsmeadowforest1" : {
+    "name" : "Волчья поляна",
+    "trade" : false,
+    "trade_list" : {
+    }
+  },
+  "bigtreeforest1" : {
+    "name" : "дерево короля дварфов Троина берёзощита",
+    "trade" : false,
+    "trade_list" : {
+    }
+  }
+}

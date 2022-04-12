@@ -1,0 +1,20 @@
+{
+  "spawn" : {
+    "name" : "город А",
+    "mob_spawn" : false,
+    "npc_spawn" : false,
+    "mob_list" : [],
+    "npc_list" : [],
+    "paths" : ["forest1"],
+    "locations" : ["magicshopspawn", "weaponshopspawn", "tavernspawn"]
+  },
+  "forest1" : {
+    "name" : "Лес",
+    "mob_spawn" : true,
+    "npc_spawn" : true,
+    "mob_list" : ["wolf"],
+    "npc_list" : ["thief"],
+    "paths" : ["spawn"],
+    "locations" : ["wolfsmeadowforest1", "bigtreeforest1"]
+  }
+}
