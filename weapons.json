@@ -1,0 +1,14 @@
+{
+  "fist" : {
+    "name" : "кулак",
+    "dmg" : [1, 1, 1, 2],
+    "effect" : [],
+    "need" : {"STR": 0, "CON": 0, "DEX": 0, "WIS": 0, "INT": 0, "CHA": 0}
+  },
+  "common_training_sword" : {
+    "name" : "обычный меч для тренировок",
+    "dmg" : [999, 999, 999],
+    "effect" : ["fire", "poison", "stun", "heal"],
+    "need" : {"STR": 6, "CON": 0, "DEX": 2, "WIS": 0, "INT": 0, "CHA": 0}
+  }
+}

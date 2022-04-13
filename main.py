@@ -15,6 +15,8 @@ def main():
         mobs = json.load(file)
     with open('locations.json', encoding='utf-8') as file:
         locations = json.load(file)
+    with open('weapons.json', encoding='utf-8') as file:
+        weapons = json.load(file)
     vk_session = vk_api.VkApi(
         token=TOKEN)
     longpoll = VkBotLongPoll(vk_session, id_сообщества)
@@ -375,6 +377,65 @@ def main():
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=f"Я не знаю такого места (",
                                      random_id=random.randint(0, 2 ** 64))
+            elif text in ['обычный меч для тренировок', 'кулак']:
+                owner = event.obj.message['from_id']
+                mode = cur.execute(f"""SELECT mode FROM main
+                                       WHERE player_id = {owner}""").fetchall()[0][0]
+                translate = {"обычный меч для тренировок":"common_training_sword",
+                             "кулак":"fist"}
+                if mode == 'idle':
+                    if translate[text] != 'fist':
+                        have = cur.execute(f"""SELECT {translate[text]} FROM main
+                                               WHERE player_id = {owner}""").fetchall()[0][0]
+                        STR = cur.execute(f"""SELECT STR FROM main
+                                               WHERE player_id = {owner}""").fetchall()[0][0]
+                        WIS = cur.execute(f"""SELECT WIS FROM main
+                                              WHERE player_id = {owner}""").fetchall()[0][0]
+                        DEX = cur.execute(f"""SELECT DEX FROM main
+                                              WHERE player_id = {owner}""").fetchall()[0][0]
+                        INT = cur.execute(f"""SELECT INT FROM main
+                                              WHERE player_id = {owner}""").fetchall()[0][0]
+                        CHA = cur.execute(f"""SELECT CHA FROM main
+                                              WHERE player_id = {owner}""").fetchall()[0][0]
+                        CON = cur.execute(f"""SELECT CON FROM main
+                                              WHERE player_id = {owner}""").fetchall()[0][0]
+                        if have:
+                            requirements = weapons[translate[text]]['need']
+                            if (STR >= requirements['STR'] and WIS >= requirements['WIS'] and
+                                DEX >= requirements['DEX'] and INT >= requirements['INT'] and
+                                CHA >= requirements['CHA'] and CON >= requirements['CON']):
+                                cur.execute(f"""UPDATE main
+                                                SET equiped_weapon = ?
+                                                WHERE player_id = ?""", (translate[text], owner))
+                                con.commit()
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"Поздравляем ! {text} экипирован !",
+                                                 random_id=random.randint(0, 2 ** 64))
+                            else:
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"Кажется Вы недостаточно прокачаны :(",
+                                                 random_id=random.randint(0, 2 ** 64))
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"Требования :\n"
+                                                         f"СИЛА - {STR}"
+                                                         f"ЛОВКОСТЬ - {DEX}"
+                                                         f"ВЫНОСЛИВОСТЬ - {CON}"
+                                                         f"МУДРОСТЬ - {WIS}"
+                                                         f"ИНТЕЛЛЕКТ - {INT}"
+                                                         f"ХАРИЗМА - {CHA}",
+                                                 random_id=random.randint(0, 2 ** 64))
+                        else:
+                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                             message=f"В рюкзак гляжу... оружия не нахожу",
+                                             random_id=random.randint(0, 2 ** 64))
+                    else:
+                        cur.execute(f"""UPDATE main
+                                        SET equiped_weapon = ?
+                                        WHERE player_id = ?""",
+                                    (translate[text], owner))
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Поздравляем ! {text} экипирован !",
+                                         random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Я вас не понимаю.....",
