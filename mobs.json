@@ -2,18 +2,16 @@
   "wolf" : {
     "name" : "Волк",
     "health" : 10,
-    "attack" : {
-      "80" : {
+    "attack" : [{
         "name" : "укус",
         "dmg" : 2,
-        "effect" : []
+        "effect" : ""
       },
-      "20" : {
+      {
         "name" : "опрокидывание",
         "dmg" : 3,
-        "effect" : ["stun"]
-      }
-    },
+        "effect" : "stun"
+      }],
     "drop" : {
       "90" : "wolf_fur",
       "9" : "wolf_fang"
@@ -22,18 +20,16 @@
   "thief" : {
     "name" : "Вор",
     "health" : 15,
-    "attack" : {
-      "99" : {
+    "attack" : [{
         "name" : "отравленный нож",
         "dmg" : 1,
-        "effect" : ["poison"]
+        "effect" : "poison"
       },
-      "1" : {
+      {
         "name" : "ослепляющий камень",
         "dmg" : 0,
-        "effect" : ["run"]
-      }
-    },
+        "effect" : "run"
+      }],
     "drop" : {
       "51" : "copper_coin",
       "50" : "copper_coin",

@@ -18,8 +18,8 @@ def main():
     with open('weapons.json', encoding='utf-8') as file:
         weapons = json.load(file)
     vk_session = vk_api.VkApi(
-        token=TOKEN)
-    longpoll = VkBotLongPoll(vk_session, id_сообщества)
+        token='50f9dff39373368d994a39535633bc4794c7d7cc3777c2562940b5d59ed3e9fc67c82cd0dce2ef0d775b4')
+    longpoll = VkBotLongPoll(vk_session, '212262401')
     con = sqlite3.connect("db_session.db")
     cur = con.cursor()
     for event in longpoll.listen():
@@ -30,11 +30,12 @@ def main():
             print('Текст:', event.obj.message['text'])
             text = event.obj.message['text']
             vk = vk_session.get_api()
+            owner = event.obj.message['from_id']
             if (str(event.obj.message['from_id']),) not in cur.execute("""SELECT player_id FROM main""").fetchall() and \
                     text[0] != '/':
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Приветствую Вас, Соискатель. Вас ожидает интересное приключение в"
-                                         f" мире Зельтронии. Я - Ваш проводник. Меня зовут C:\\Users\\...\\main.py, но"
+                                         f" мире Зельтронии. Я - Ваш проводник. Меня зовут C:\\Users\\...\\main.py, но "
                                          f"Вы можете звать меня Консуас. Для начала предлагаю Вам создать персонажа. Дл"
                                          f"я"
                                          "этого напишите в чат /создать {имя вашего персонажа} {раса персонажа} {класс "
@@ -377,65 +378,261 @@ def main():
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=f"Я не знаю такого места (",
                                      random_id=random.randint(0, 2 ** 64))
+            elif text == 'сбежать':
+                mode = cur.execute(f"""SELECT mode FROM main
+                                                       WHERE player_id = {owner}""").fetchall()[0][0]
+                if mode == 'battle':
+                    chance = random.randint(0, 100)
+                    if chance >= 80:
+                        cur.execute(f"""UPDATE main
+                                        SET mode = ?
+                                        WHERE player_id = ?""",
+                                    ('idle', owner))
+                        con.commit()
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Побег успешен :)",
+                                         random_id=random.randint(0, 2 ** 64))
+                    else:
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Что-то пошло не так :/",
+                                         random_id=random.randint(0, 2 ** 64))
+                        queue = cur.execute(f"""SELECT queue FROM main
+                                                                                   WHERE player_id = {owner}""").fetchall()[
+                            0][0].split()
+                        queue = [i.split('-') for i in queue]
+                        if queue and mode == 'battle':
+                            dmg = 0
+                            armor = 0
+                            for i in queue:
+                                number = random.randint(0, len(mobs[i[0]]['attack']) - 1)
+                                dmg += mobs[i[0]]['attack'][number]['dmg'] * armor
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"Вас атоковал {i[0]} атакой {mobs[i[0]]['attack'][number]['name']}."
+                                                         f" Вы получили {mobs[i[0]]['attack'][number]['dmg'] * armor} урона.",
+                                                 random_id=random.randint(0, 2 ** 64))
+                                if mobs[i[0]]['attack'][number]['effect'] == "posion":
+                                    posion = random.randint(0, 1) * 5 * armor
+                                    dmg += posion
+                                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                                     message=f"Вы получили {posion * armor} урона из-за эффекта posion",
+                                                     random_id=random.randint(0, 2 ** 64))
+                                elif mobs[i[0]]['attack'][number]['effect'] == "stun":
+                                    stun = random.randint(0, 1) * 30 * armor
+                                    dmg += stun
+                                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                                     message=f"Вы получили {stun * armor} урона из-за эффекта stun",
+                                                     random_id=random.randint(0, 2 ** 64))
+                                elif mobs[i[0]]['attack'][number]['effect'] == "run":
+                                    will = bool(random.randint(0, 1))
+                                    if will and i == queue[0]:
+                                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                                         message=f"{queue[0][0]} сбежал",
+                                                         random_id=random.randint(0, 2 ** 64))
+                                        del queue[0]
+                                elif mobs[i[0]]['attack'][number]['effect'] == "fire":
+                                    fire = random.randint(1, 4) * armor
+                                    dmg += fire
+                                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                                     message=f"Вы получили {fire * armor} урона из-за эффекта fire",
+                                                     random_id=random.randint(0, 2 ** 64))
+                            cur.execute(f"""UPDATE main
+                                                                        SET health = health - ?
+                                                                        WHERE player_id = ?""",
+                                        (dmg, owner))
+                            con.commit()
+                            health = cur.execute(f"""SELECT health FROM main
+                                                                                                    WHERE player_id = {owner}""").fetchall()[
+                                0][0]
+                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                             message=f"У Вас осталось {health}",
+                                             random_id=random.randint(0, 2 ** 64))
+                else:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"А от кого сбегать то ?",
+                                     random_id=random.randint(0, 2 ** 64))
             elif text in ['обычный меч для тренировок', 'кулак']:
                 owner = event.obj.message['from_id']
                 mode = cur.execute(f"""SELECT mode FROM main
                                        WHERE player_id = {owner}""").fetchall()[0][0]
                 translate = {"обычный меч для тренировок":"common_training_sword",
                              "кулак":"fist"}
-                if mode == 'idle':
-                    if translate[text] != 'fist':
-                        have = cur.execute(f"""SELECT {translate[text]} FROM main
-                                               WHERE player_id = {owner}""").fetchall()[0][0]
-                        STR = cur.execute(f"""SELECT STR FROM main
-                                               WHERE player_id = {owner}""").fetchall()[0][0]
-                        WIS = cur.execute(f"""SELECT WIS FROM main
-                                              WHERE player_id = {owner}""").fetchall()[0][0]
-                        DEX = cur.execute(f"""SELECT DEX FROM main
-                                              WHERE player_id = {owner}""").fetchall()[0][0]
-                        INT = cur.execute(f"""SELECT INT FROM main
-                                              WHERE player_id = {owner}""").fetchall()[0][0]
-                        CHA = cur.execute(f"""SELECT CHA FROM main
-                                              WHERE player_id = {owner}""").fetchall()[0][0]
-                        CON = cur.execute(f"""SELECT CON FROM main
-                                              WHERE player_id = {owner}""").fetchall()[0][0]
-                        if have:
-                            requirements = weapons[translate[text]]['need']
-                            if (STR >= requirements['STR'] and WIS >= requirements['WIS'] and
-                                DEX >= requirements['DEX'] and INT >= requirements['INT'] and
-                                CHA >= requirements['CHA'] and CON >= requirements['CON']):
-                                cur.execute(f"""UPDATE main
-                                                SET equiped_weapon = ?
-                                                WHERE player_id = ?""", (translate[text], owner))
-                                con.commit()
-                                vk.messages.send(user_id=event.obj.message['from_id'],
-                                                 message=f"Поздравляем ! {text} экипирован !",
-                                                 random_id=random.randint(0, 2 ** 64))
+                weapon = cur.execute(f"""SELECT equiped_weapon FROM main
+                                                                WHERE player_id = {owner}""").fetchall()[0][0]
+                if translate['text'] == weapon:
+                    if mode == 'idle':
+                        if translate[text] != 'fist':
+                            have = cur.execute(f"""SELECT {translate[text]} FROM main
+                                                   WHERE player_id = {owner}""").fetchall()[0][0]
+                            STR = cur.execute(f"""SELECT STR FROM main
+                                                   WHERE player_id = {owner}""").fetchall()[0][0]
+                            WIS = cur.execute(f"""SELECT WIS FROM main
+                                                  WHERE player_id = {owner}""").fetchall()[0][0]
+                            DEX = cur.execute(f"""SELECT DEX FROM main
+                                                  WHERE player_id = {owner}""").fetchall()[0][0]
+                            INT = cur.execute(f"""SELECT INT FROM main
+                                                  WHERE player_id = {owner}""").fetchall()[0][0]
+                            CHA = cur.execute(f"""SELECT CHA FROM main
+                                                  WHERE player_id = {owner}""").fetchall()[0][0]
+                            CON = cur.execute(f"""SELECT CON FROM main
+                                                  WHERE player_id = {owner}""").fetchall()[0][0]
+                            if have:
+                                requirements = weapons[translate[text]]['need']
+                                if (STR >= requirements['STR'] and WIS >= requirements['WIS'] and
+                                    DEX >= requirements['DEX'] and INT >= requirements['INT'] and
+                                    CHA >= requirements['CHA'] and CON >= requirements['CON']):
+                                    cur.execute(f"""UPDATE main
+                                                    SET equiped_weapon = ?
+                                                    WHERE player_id = ?""", (translate[text], owner))
+                                    con.commit()
+                                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                                     message=f"Поздравляем ! {text} экипирован !",
+                                                     random_id=random.randint(0, 2 ** 64))
+                                else:
+                                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                                     message=f"Кажется Вы недостаточно прокачаны :(",
+                                                     random_id=random.randint(0, 2 ** 64))
+                                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                                     message=f"Требования :\n"
+                                                             f"СИЛА - {STR}"
+                                                             f"ЛОВКОСТЬ - {DEX}"
+                                                             f"ВЫНОСЛИВОСТЬ - {CON}"
+                                                             f"МУДРОСТЬ - {WIS}"
+                                                             f"ИНТЕЛЛЕКТ - {INT}"
+                                                             f"ХАРИЗМА - {CHA}",
+                                                     random_id=random.randint(0, 2 ** 64))
                             else:
                                 vk.messages.send(user_id=event.obj.message['from_id'],
-                                                 message=f"Кажется Вы недостаточно прокачаны :(",
-                                                 random_id=random.randint(0, 2 ** 64))
-                                vk.messages.send(user_id=event.obj.message['from_id'],
-                                                 message=f"Требования :\n"
-                                                         f"СИЛА - {STR}"
-                                                         f"ЛОВКОСТЬ - {DEX}"
-                                                         f"ВЫНОСЛИВОСТЬ - {CON}"
-                                                         f"МУДРОСТЬ - {WIS}"
-                                                         f"ИНТЕЛЛЕКТ - {INT}"
-                                                         f"ХАРИЗМА - {CHA}",
+                                                 message=f"В рюкзак гляжу... оружия не нахожу",
                                                  random_id=random.randint(0, 2 ** 64))
                         else:
+                            cur.execute(f"""UPDATE main
+                                            SET equiped_weapon = ?
+                                            WHERE player_id = ?""",
+                                        (translate[text], owner))
+                            con.commit()
                             vk.messages.send(user_id=event.obj.message['from_id'],
-                                             message=f"В рюкзак гляжу... оружия не нахожу",
+                                             message=f"Поздравляем ! {text} экипирован !",
                                              random_id=random.randint(0, 2 ** 64))
-                    else:
-                        cur.execute(f"""UPDATE main
-                                        SET equiped_weapon = ?
-                                        WHERE player_id = ?""",
-                                    (translate[text], owner))
-                        vk.messages.send(user_id=event.obj.message['from_id'],
-                                         message=f"Поздравляем ! {text} экипирован !",
-                                         random_id=random.randint(0, 2 ** 64))
+                    elif mode == 'battle':
+                        queue = cur.execute(f"""SELECT queue FROM main
+                                                   WHERE player_id = {owner}""").fetchall()[0][0].split()
+                        queue = [i.split('-') for i in queue]
+                        weapon = cur.execute(f"""SELECT equiped_weapon FROM main
+                                                    WHERE player_id = {owner}""").fetchall()[0][0]
+                        if weapon == '':
+                            weapon = 'fist'
+                        dmg = weapons[weapon]['dmg'][random.randint(0, len(weapons[weapon]['dmg']) - 1)]
+                        try:
+                            effect = weapons[weapon]['effect'][random.randint(0, len(weapons[weapon]['effect']) - 1)]
+                        except Exception:
+                            effect = ''
+                        if effect == 'heal' :
+                            HP, LVL = cur.execute(f"""SELECT health, level FROM main
+                                                            WHERE player_id = {owner}""").fetchall()[0][0]
+                            cur.execute(f"""UPDATE main
+                                            SET health = ?
+                                            WHERE player_id = ?""",
+                                        (HP + random.randint(1, LVL + 1), owner))
+                            con.commit()
+                        elif effect == 'posion':
+                            LVL = cur.execute(f"""SELECT level FROM main WHERE player_id = {owner}""").fetchall()[0][0]
+                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                             message=f"Эффект posion задействован",
+                                             random_id=random.randint(0, 2 ** 64))
+                            dmg += random.randint(0, 1) * LVL * 2
+                        elif effect == 'fire':
+                            LVL = cur.execute(f"""SELECT level FROM main WHERE player_id = {owner}""").fetchall()[0][0]
+                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                             message=f"Эффект fire задействован",
+                                             random_id=random.randint(0, 2 ** 64))
+                            dmg += random.randint(1, LVL)
+                        elif effect == 'stun':
+                            LVL = cur.execute(f"""SELECT level FROM main WHERE player_id = {owner}""").fetchall()[0][0]
+                            chance = random.randint(0, 100)
+                            if chance >= 99 - LVL:
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"При помощи эффекта stun Вы вывели из строя {queue[0][0]}",
+                                                 random_id=random.randint(0, 2 ** 64))
+                                del queue[0]
+                        if queue:
+                            if int(queue[0][1]) <= dmg:
+                                for i in mobs[queue[0][0]]['drop'].keys():
+                                    chance = random.randint(0, 100)
+                                    if chance > int(i):
+                                        command = f"""UPDATE main
+                                                    SET {mobs[queue[0][0]]['drop'][i]} = {mobs[queue[0][0]]['drop'][i]} + 1
+                                                    WHERE player_id = {owner}"""
+                                        cur.execute(command)
+                                        con.commit()
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"{queue[0][0]} убит",
+                                                 random_id=random.randint(0, 2 ** 64))
+                                del queue[0]
+                            else:
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"Нанесено {dmg} урона",
+                                                 random_id=random.randint(0, 2 ** 64))
+                                queue[0][1] = str(int(queue[0][1]) - dmg)
+                                queue = ' '.join(['-'.join(i) for i in queue])
+                        try:
+                            cur.execute("""UPDATE main SET queue = ? WHERE player_id = ?""", (queue, owner))
+                            con.commit()
+                            queue = cur.execute(f"""SELECT queue FROM main
+                                                           WHERE player_id = {owner}""").fetchall()[0][0].split()
+                            queue = [i.split('-') for i in queue]
+                            if queue and mode == 'battle':
+                                dmg = 0
+                                armor = 0
+                                for i in queue:
+                                    number = random.randint(0, len(mobs[i[0]]['attack']) - 1)
+                                    dmg += mobs[i[0]]['attack'][number]['dmg'] * armor
+                                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                                     message=f"Вас атоковал {i[0]} атакой {mobs[i[0]]['attack'][number]['name']}."
+                                                             f" Вы получили {mobs[i[0]]['attack'][number]['dmg'] * armor} урона.",
+                                                     random_id=random.randint(0, 2 ** 64))
+                                    if mobs[i[0]]['attack'][number]['effect'] == "posion":
+                                        posion = random.randint(0, 1) * 5 * armor
+                                        dmg += posion
+                                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                                         message=f"Вы получили {posion * armor} урона из-за эффекта posion",
+                                                         random_id=random.randint(0, 2 ** 64))
+                                    elif mobs[i[0]]['attack'][number]['effect'] == "stun":
+                                        stun = random.randint(0, 1) * 30 * armor
+                                        dmg += stun
+                                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                                         message=f"Вы получили {stun * armor} урона из-за эффекта stun",
+                                                         random_id=random.randint(0, 2 ** 64))
+                                    elif mobs[i[0]]['attack'][number]['effect'] == "run":
+                                        will = bool(random.randint(0, 1))
+                                        if will and i == queue[0]:
+                                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                                             message=f"{queue[0][0]} сбежал",
+                                                             random_id=random.randint(0, 2 ** 64))
+                                            del queue[0]
+                                    elif mobs[i[0]]['attack'][number]['effect'] == "fire":
+                                        fire = random.randint(1, 4) * armor
+                                        dmg += fire
+                                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                                         message=f"Вы получили {fire * armor} урона из-за эффекта fire",
+                                                         random_id=random.randint(0, 2 ** 64))
+                                cur.execute(f"""UPDATE main
+                                                SET health = health - ?
+                                                WHERE player_id = ?""",
+                                            (dmg, owner))
+                                con.commit()
+                                health = cur.execute(f"""SELECT health FROM main
+                                                                            WHERE player_id = {owner}""").fetchall()[0][0]
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"У Вас осталось {health}",
+                                                 random_id=random.randint(0, 2 ** 64))
+                        except Exception:
+                            cur.execute(f"""UPDATE main
+                                            SET mode = ?
+                                            WHERE player_id = ?""",
+                                        ('idle', owner))
+                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                             message=f"Битва закончена !",
+                                             random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Я вас не понимаю.....",
