@@ -332,51 +332,109 @@ def main():
                                                          random_id=random.randint(0, 2 ** 64))
                                 number += 1
             elif text.split()[0] == 'перейти':
-                to = ' '.join(text.split()[1:])
-                x = {}
-                for i in locations.keys():
-                    x[locations[i]['name']] = i
-                for i in world.keys():
-                    x[world[i]['name']] = i
-                if to in x.keys():
-                    to1 = x[to]
-                    owner = event.obj.message['from_id']
-                    result = cur.execute(f"""SELECT world, location FROM main
-                                                WHERE player_id = {owner}""").fetchall()[0]
-                    if to1 in world[result[0]]['locations']:
-                        cur.execute(f"""UPDATE main
-                                        SET location = ?
-                                        WHERE player_id = ?""", (to1, owner))
-                        con.commit()
+                mode = cur.execute(f"""SELECT mode FROM main
+                                                                WHERE player_id = {owner}""").fetchall()[0][0]
+                if mode != 'battle':
+                    to = ' '.join(text.split()[1:])
+                    x = {}
+                    for i in locations.keys():
+                        x[locations[i]['name']] = i
+                    for i in world.keys():
+                        x[world[i]['name']] = i
+                    if to in x.keys():
+                        to1 = x[to]
+                        owner = event.obj.message['from_id']
                         result = cur.execute(f"""SELECT world, location FROM main
-                                                    WHERE player_id = {owner}""").fetchall()
-                        vk.messages.send(user_id=event.obj.message['from_id'],
-                                         message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
-                                                 f" {locations[result[0][1]]['name']}",
-                                         random_id=random.randint(0, 2 ** 64))
-                    elif to1 in world[result[0]]['paths']:
-                        cur.execute(f"""UPDATE main
-                                        SET world = ?
-                                        WHERE player_id = ?""", (to1, owner))
-                        to2 = world[to1]['locations'][0]
-                        con.commit()
-                        cur.execute(f"""UPDATE main
-                                        SET location = ?
-                                        WHERE player_id = ?""", (to2, owner))
-                        con.commit()
-                        result = cur.execute(f"""SELECT world, location FROM main
-                                                                            WHERE player_id = {owner}""").fetchall()
-                        vk.messages.send(user_id=event.obj.message['from_id'],
-                                         message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
-                                                 f" {locations[result[0][1]]['name']}",
-                                         random_id=random.randint(0, 2 ** 64))
+                                                    WHERE player_id = {owner}""").fetchall()[0]
+                        if to1 in world[result[0]]['locations']:
+                            cur.execute(f"""UPDATE main
+                                            SET location = ?
+                                            WHERE player_id = ?""", (to1, owner))
+                            con.commit()
+                            result = cur.execute(f"""SELECT world, location FROM main
+                                                        WHERE player_id = {owner}""").fetchall()
+                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                             message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
+                                                     f" {locations[result[0][1]]['name']}",
+                                             random_id=random.randint(0, 2 ** 64))
+                        elif to1 in world[result[0]]['paths']:
+                            cur.execute(f"""UPDATE main
+                                            SET world = ?
+                                            WHERE player_id = ?""", (to1, owner))
+                            to2 = world[to1]['locations'][0]
+                            con.commit()
+                            cur.execute(f"""UPDATE main
+                                            SET location = ?
+                                            WHERE player_id = ?""", (to2, owner))
+                            con.commit()
+                            result = cur.execute(f"""SELECT world, location FROM main
+                                                                                WHERE player_id = {owner}""").fetchall()
+                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                             message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
+                                                     f" {locations[result[0][1]]['name']}",
+                                             random_id=random.randint(0, 2 ** 64))
+                            print(world[result[0][0]]['mob_spawn'])
+                            if world[result[0][0]]['mob_spawn']:
+                                chance = random.randint(0, 100)
+                                if chance >= 50:
+                                    x = len(world[result[0][0]]['mob_list'])
+                                    queue = world[result[0][0]]['mob_list'][random.randint(0, x)]
+                                    queue = f"{queue}-{mobs[queue]['health']}"
+                                    cur.execute(f"""UPDATE main
+                                                    SET queue = ?
+                                                    WHERE player_id = ?""", (queue, owner))
+                                    con.commit()
+                                    cur.execute(f"""UPDATE main
+                                                    SET mode = ?
+                                                    WHERE player_id = ?""", ('battle', owner))
+                                    con.commit()
+                                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                                     message=f"На Вас напал/напали {queue}",
+                                                     random_id=random.randint(0, 2 ** 64))
+                        else:
+                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                             message=f"Отсюда туда добраться нельзя... Попробуй другое место.",
+                                             random_id=random.randint(0, 2 ** 64))
                     else:
                         vk.messages.send(user_id=event.obj.message['from_id'],
-                                         message=f"Отсюда туда добраться нельзя... Попробуй другое место.",
+                                         message=f"Я не знаю такого места (",
                                          random_id=random.randint(0, 2 ** 64))
                 else:
                     vk.messages.send(user_id=event.obj.message['from_id'],
-                                     message=f"Я не знаю такого места (",
+                                     message=f"Пока Вы находитесь в битве спокойно ходить нельзя :)",
+                                     random_id=random.randint(0, 2 ** 64))
+            elif text == 'враги':
+                queue = cur.execute(f"""SELECT queue FROM main
+                                             WHERE player_id = {owner}""").fetchall()[0][0]
+                mode = cur.execute(f"""SELECT mode FROM main
+                                             WHERE player_id = {owner}""").fetchall()[0][0]
+                if mode == 'battle':
+                    index = 0
+                    for i in queue.split():
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"{index} : {i}",
+                                         random_id=random.randint(0, 2 ** 64))
+                        index += 1
+                else:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Вы пока ни с кем не сражаетесь :)",
+                                     random_id=random.randint(0, 2 ** 64))
+            elif text is enumerate:
+                queue = cur.execute(f"""SELECT queue FROM main
+                                                             WHERE player_id = {owner}""").fetchall()[0][0]
+                mode = cur.execute(f"""SELECT mode FROM main
+                                                             WHERE player_id = {owner}""").fetchall()[0][0]
+                queue = queue.split()
+                if mode == 'battle':
+                    if len(queue) < int(text):
+                        queue[0], queue[int(text)] = queue[int(text)], queue[0]
+                    else:
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"ОШИБКА : Неверное число. Повторите попытку позже",
+                                         random_id=random.randint(0, 2 ** 64))
+                else:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Вы пока ни с кем не сражаетесь :)",
                                      random_id=random.randint(0, 2 ** 64))
             elif text == 'сбежать':
                 mode = cur.execute(f"""SELECT mode FROM main
@@ -458,7 +516,7 @@ def main():
                              "кулак":"fist"}
                 weapon = cur.execute(f"""SELECT equiped_weapon FROM main
                                                                 WHERE player_id = {owner}""").fetchall()[0][0]
-                if translate['text'] == weapon:
+                if translate[text] == weapon:
                     if mode == 'idle':
                         if translate[text] != 'fist':
                             have = cur.execute(f"""SELECT {translate[text]} FROM main
