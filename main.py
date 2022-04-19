@@ -8,6 +8,9 @@ from secrets import TOKEN, group_id
 
 
 def main():
+    in_dialogue = False
+    curr = None
+    dialogue = None
     with open('world.json', encoding='utf-8') as file:
         world = json.load(file)
     with open('npcs.json', encoding='utf-8') as file:
@@ -41,6 +44,21 @@ def main():
                                          "эльф}. А класс в список : {воин}.\nЕсли хотите узнать подробнее о расах и "
                                          "классах напишите в чат /инфо расы или /инфо классы",
                                  random_id=random.randint(0, 2 ** 64))
+            elif in_dialogue and text in map(lambda y: y["text"], dialogue[curr]['choose']):
+                for i in dialogue[curr]['choose']:
+                    if text == i["text"]:
+                        curr = i["next"]
+                        if dialogue[curr]['type'] == 'dialog':
+                            vk.messages.send(user_id=event.obj.message['from_id'],
+                                             message=dialogue[curr]['text'],
+                                             random_id=random.randint(0, 2 ** 64))
+                            for j in dialogue[curr]['choose']:
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=i['text'],
+                                                 random_id=random.randint(0, 2 ** 64))
+                        break
+                if curr == "out":
+                    in_dialogue = False
             elif text[0] == '/':
                 if text[1:].split()[0] == 'помощь':
                     vk.messages.send(user_id=event.obj.message['from_id'],
@@ -250,6 +268,20 @@ def main():
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Вам доступны квесты: {message}",
                                  random_id=random.randint(0, 2 ** 64))
+            elif text.split()[0] == 'Поговорить':
+                obj = text.split()[-1]
+                with open('npcs.json') as f:
+                    dialogue = json.load(f)
+                dialogue = dialogue[obj]['dialog']
+                curr = '00'
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=dialogue[curr]['text'],
+                                 random_id=random.randint(0, 2 ** 64))
+                for i in dialogue[curr]['choose']:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=i['text'],
+                                     random_id=random.randint(0, 2 ** 64))
+                in_dialogue = True
             elif text.split()[0] == 'перейти':
                 to = ' '.join(text.split()[1:])
                 x = {}
@@ -269,9 +301,16 @@ def main():
                         con.commit()
                         result = cur.execute(f"""SELECT world, location FROM main
                                                     WHERE player_id = {owner}""").fetchall()
+                        mobs = cur.execute(f"""SELECT Name FROM Mobs WHERE World = ?""", (to1,)).fetchall()
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
-                                                 f" {locations[result[0][1]]['name']}",
+                                                 f" {locations[result[0][1]]['name']}, Вы можете поговорить с любым из:\n",
+                                         random_id=random.randint(0, 2 ** 64))
+                        message = ''
+                        for i in mobs:
+                            message += i
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=message,
                                          random_id=random.randint(0, 2 ** 64))
                     elif to1 in world[result[0]]['paths']:
                         cur.execute(f"""UPDATE main
@@ -290,15 +329,20 @@ def main():
                                                  f" {locations[result[0][1]]['name']}",
                                          random_id=random.randint(0, 2 ** 64))
                     else:
+                        mobs = cur.execute(f"""SELECT Name FROM Mobs WHERE World = ?""", (to1,)).fetchall()
                         vk.messages.send(user_id=event.obj.message['from_id'],
-                                         message=f"Отсюда туда добраться нельзя... Попробуй другое место.",
+                                         message=f"Отсюда туда добраться нельзя... Попробуй другое место. Но Вы можете поговорить с\n",
+                                         random_id=random.randint(0, 2 ** 64))
+                        message = ''
+                        for i in mobs:
+                            message += i[0]
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=message,
                                          random_id=random.randint(0, 2 ** 64))
                 else:
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=f"Я не знаю такого места :(",
                                      random_id=random.randint(0, 2 ** 64))
-            elif text == "сбежать":
-                pass
             elif text == "враги":
                 message = ''
                 with open('mobs.json') as f:
@@ -334,7 +378,8 @@ def main():
                                     SET equiped_weapon = ?
                                     WHERE player_id = ?""", (text, event.obj.message['from_id'])).fetchall()
                     vk.messages.send(user_id=event.obj.message['from_id'],
-                                     message=f'Вы выбрали на вооружение {(cur.execute(f"""SELECT equiped_weapon FROM main WHERE player_id = {event.obj.message["from_id"]}""").fetchall())[0][0]}',
+                                     message=f'Вы выбрали на вооружение '
+                                             f'{(cur.execute(f"""SELECT equiped_weapon FROM main WHERE player_id = {event.obj.message["from_id"]}""").fetchall())[0][0]}',
                                      random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
