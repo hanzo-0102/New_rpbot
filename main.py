@@ -56,6 +56,13 @@ def main():
                                 vk.messages.send(user_id=event.obj.message['from_id'],
                                                  message=i['text'],
                                                  random_id=random.randint(0, 2 ** 64))
+                        elif dialogue[curr]['type'].split()[0] == 'command':
+                            if dialogue[curr]['type'].split()[1:] == ['battle']:
+                                pass
+                            elif dialogue[curr]['type'].split()[1:] == ['take']:
+                                cur.execute(f"""UPDATE main
+                                                SET {dialogue[curr]['execute'].split()[0]} = NULL
+                                                WHERE player_id = ?""", (event.obj.message['from_id'],)).fetchall()
                         break
                 if curr == "out":
                     in_dialogue = False
@@ -361,9 +368,9 @@ def main():
                                          message=f"Вы сбежали с поля боя",
                                          random_id=random.randint(0, 2 ** 64))
                     else:
-                        vk.message.send(user_id=event.obj.message['from_id'],
-                                        message=f"Вам не удалось совершить побег. За дизертирство вы были пойманы и временно забанены. Теперь вы не можете принимать участие в игре",
-                                        random_id=random.randint(0, 2 ** 64))
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Դուք դատապարտվել եք NKVD-ի կողմից հակահեղափոխական փախուստի փորձի համար",
+                                         random_id=random.randint(0, 2 ** 64))
             elif ("battle",) in cur.execute(
                     f"""SELECT mode FROM main WHERE player_id = {event.obj.message['from_id']}""").fetchall() and \
                     text.split()[0] == 'взять':

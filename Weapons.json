@@ -1,24 +1,61 @@
 {
-  "Fist": {
-    "name": "Кулак",
-    "Attack power": 1,
-    "need": {"STR": 1,
-            "DEX": 1,
-            "WIS": 1,
-            "CON": 1,
-            "INT": 1,
-            "CHA":  1}
-  },
-  "Jigsaw": {
-    "name": "Лобзик",
-    "Attack power": 1,
+  "fist": {
+    "name": "кулак",
+    "dmg": [
+      1,
+      1,
+      1,
+      2
+    ],
+    "effect": [],
     "need": {
-      "STR": 1000,
-      "DEX": 1000,
-      "WIS": 1000,
-      "CON": 1000,
-      "INT": 1000,
-      "CHA": 1000
+      "STR": 0,
+      "CON": 0,
+      "DEX": 0,
+      "WIS": 0,
+      "INT": 0,
+      "CHA": 0
+    }
+  },
+  "common_training_sword": {
+    "name": "обычный меч для тренировок",
+    "dmg": [
+      999,
+      999,
+      999
+    ],
+    "effect": [
+      "fire",
+      "poison",
+      "stun",
+      "heal"
+    ],
+    "need": {
+      "STR": 6,
+      "CON": 0,
+      "DEX": 2,
+      "WIS": 0,
+      "INT": 0,
+      "CHA": 0
+    }
+  },
+  "jigsaw": {
+    "name": "Сабля",
+    "dmg": [
+      100,
+      100,
+      100
+    ],
+    "effect": [
+      "fire"
+    ],
+    "need": {
+      "STR": 1,
+      "CON": 0,
+      "DEX": 2,
+      "WIS": 0,
+      "INT": 0,
+      "CHA": 0
     }
   }
 }
