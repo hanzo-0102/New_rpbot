@@ -308,11 +308,25 @@ def main():
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Текущие враги:\n {message}",
                                  random_id=random.randint(0, 2 ** 64))
+            elif text == "сбежать":
+                if ("battle",) in cur.execute(
+                        f"""SELECT mode FROM main WHERE player_id = {event.obj.message['from_id']}""").fetchall():
+                    temp = random.randint(0, 1)
+                    if temp:
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=f"Вы сбежали с поля боя",
+                                         random_id=random.randint(0, 2 ** 64))
+                    else:
+                        vk.message.send(user_id=event.obj.message['from_id'],
+                                        message=f"Вам не удалось совершить побег. За дизертирство вы были пойманы и временно забанены. Теперь вы не можете принимать участие в игре",
+                                        random_id=random.randint(0, 2 ** 64))
             elif ("battle",) in cur.execute(
-                    f"""SELECT mode FROM main WHERE player_id = {event.obj.message['from_id']}""").fetchall():
+                    f"""SELECT mode FROM main WHERE player_id = {event.obj.message['from_id']}""").fetchall() and \
+                    text.split()[0] == 'взять':
                 with open("Weapons.json") as f:
                     weapons = json.load(f)
                 temp = list(weapons.keys())
+                text = text.split()[-1]
                 for i in range(len(temp)):
                     temp[i] = weapons[temp[i]]['name']
                 if text in temp:
@@ -320,7 +334,7 @@ def main():
                                     SET equiped_weapon = ?
                                     WHERE player_id = ?""", (text, event.obj.message['from_id'])).fetchall()
                     vk.messages.send(user_id=event.obj.message['from_id'],
-                                     message=f'Вы выбрали на вооружение {cur.execute(f"""SELECT equiped_weapon FROM main WHERE player_id = {event.obj.message["from_id"]}""").fetchall()}',
+                                     message=f'Вы выбрали на вооружение {(cur.execute(f"""SELECT equiped_weapon FROM main WHERE player_id = {event.obj.message["from_id"]}""").fetchall())[0][0]}',
                                      random_id=random.randint(0, 2 ** 64))
             else:
                 vk.messages.send(user_id=event.obj.message['from_id'],
