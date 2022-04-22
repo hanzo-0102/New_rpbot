@@ -61,7 +61,7 @@ def main():
                                 pass
                             elif dialogue[curr]['type'].split()[1:] == ['take']:
                                 cur.execute(f"""UPDATE main
-                                                SET {dialogue[curr]['execute'].split()[0]} = NULL
+                                                SET {dialogue[curr]['execute'].split()[0]} = {dialogue[curr]['execute'].split()[-1]}
                                                 WHERE player_id = ?""", (event.obj.message['from_id'],)).fetchall()
                         break
                 if curr == "out":
@@ -275,7 +275,7 @@ def main():
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Вам доступны квесты: {message}",
                                  random_id=random.randint(0, 2 ** 64))
-            elif text.split()[0] == 'Поговорить':
+            elif text.split()[0] == 'поговорить':
                 obj = text.split()[-1]
                 with open('npcs.json') as f:
                     dialogue = json.load(f)
@@ -359,6 +359,71 @@ def main():
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Текущие враги:\n {message}",
                                  random_id=random.randint(0, 2 ** 64))
+            elif text == "торговля":
+                owner = event.obj.message['from_id']
+                result = cur.execute(f"""SELECT location FROM main
+                                                        WHERE player_id = {owner}""").fetchall()[0][0]
+                level = cur.execute(f"""SELECT level FROM main
+                                                        WHERE player_id = {owner}""").fetchall()[0][0]
+                if not locations[result]['trade']:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Торговцев здесь нет... Эх :(",
+                                     random_id=random.randint(0, 2 ** 64))
+                else:
+                    trades = locations[result]['trade_list']
+                    number = 1
+                    for i in trades.keys():
+                        if int(i) < level:
+                            for j in trades[i]:
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"Сделка номер {number} :"
+                                                         f" Вы отдадите {j['give_count']} {j['give']}, а получите"
+                                                         f" {j['got_count']} {j['got']}",
+                                                 random_id=random.randint(0, 2 ** 64))
+                                number += 1
+            elif text.split()[0] == "торговать":
+                totrade = int(text.split()[1])
+                owner = event.obj.message['from_id']
+                result = cur.execute(f"""SELECT location FROM main
+                                                        WHERE player_id = {owner}""").fetchall()[0][0]
+                level = cur.execute(f"""SELECT level FROM main
+                                                        WHERE player_id = {owner}""").fetchall()[0][0]
+                if not locations[result]['trade']:
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Торговцев здесь нет... Эх :(",
+                                     random_id=random.randint(0, 2 ** 64))
+                else:
+                    trades = locations[result]['trade_list']
+                    number = 1
+                    for i in trades.keys():
+                        if int(i) < level:
+                            for j in trades[i]:
+                                if number == totrade:
+                                    give = cur.execute(f"""SELECT {j['give']} FROM main
+                                                                        WHERE player_id = {owner}""").fetchall()[0][0]
+                                    got = cur.execute(f"""SELECT {j['got']} FROM main
+                                                                        WHERE player_id = {owner}""").fetchall()[0][0]
+                                    got = int(got)
+                                    if give >= j['give_count']:
+                                        cur.execute(f"""UPDATE main
+                                                                    SET {j['give']} = ?
+                                                                    WHERE player_id = ?""",
+                                                    (give - j['give_count'], owner))
+                                        con.commit()
+                                        cur.execute(f"""UPDATE main
+                                                                    SET {j['got']} = ?
+                                                                    WHERE player_id = ?""",
+                                                    (got + j['got_count'], owner))
+                                        con.commit()
+                                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                                         message="Сделка прошла успешно !",
+                                                         random_id=random.randint(0, 2 ** 64))
+                                    else:
+                                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                                         message="Торговец : У тебя нет материалов, а я в благородства"
+                                                                 " играть не буду...",
+                                                         random_id=random.randint(0, 2 ** 64))
+                                number += 1
             elif text == "сбежать":
                 if ("battle",) in cur.execute(
                         f"""SELECT mode FROM main WHERE player_id = {event.obj.message['from_id']}""").fetchall():

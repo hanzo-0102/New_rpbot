@@ -28,5 +28,15 @@
         "next" : "out"
       }
     }
+  },
+  "villager": {
+    "dialog": {
+      "00": {
+        "type": "dialog",
+        "text": "Гм...",
+        "next": "out",
+        "choose": []
+      }
+    }
   }
 }

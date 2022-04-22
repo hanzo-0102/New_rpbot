@@ -23,6 +23,44 @@
       }]
     }
   },
+  "?": {
+    "name": "?",
+    "trade": true,
+    "trade_list": {
+      "0": [
+        {
+          "give": "ruby",
+          "give_count": 3,
+          "got": "equiped_helmet",
+          "got_count": 1
+        },
+        {
+          "give": "ruby",
+          "give_count": 5,
+          "got": "equiped_chestplate",
+          "got_count": 1
+        },
+        {
+          "give": "ruby",
+          "give_count": 4,
+          "got": "equiped_leggings",
+          "got_count": 1
+        },
+        {
+          "give": "ruby",
+          "give_count": 2,
+          "got": "equiped_boots",
+          "got_count": 1
+        }
+      ]
+    }
+  },
+  "chapel": {
+    "name": "часовня",
+    "trade": false,
+    "trade_list": {
+    }
+  },
   "weaponshopspawn" : {
     "name" : "кузня старого мастера Килвара",
     "trade" : true,

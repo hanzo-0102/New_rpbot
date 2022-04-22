@@ -5,7 +5,7 @@
     "npc_spawn" : false,
     "mob_list" : [],
     "npc_list" : [],
-    "paths" : ["forest1"],
+    "paths" : ["forest1", "village"],
     "locations" : ["magicshopspawn", "weaponshopspawn", "tavernspawn"]
   },
   "forest1" : {
@@ -16,5 +16,14 @@
     "npc_list" : ["thief"],
     "paths" : ["spawn"],
     "locations" : ["wolfsmeadowforest1", "bigtreeforest1"]
+  },
+  "village": {
+    "name": "Село",
+    "mob_spawn": false,
+    "npc_spawn": true,
+    "mob_list": [],
+    "npc_list": ["villager"],
+    "paths": ["spawn"],
+    "locations": ["?", "chapel"]
   }
 }
