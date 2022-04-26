@@ -536,8 +536,8 @@ def main():
                 owner = event.obj.message['from_id']
                 mode = cur.execute(f"""SELECT mode FROM main
                                                        WHERE player_id = {owner}""").fetchall()[0][0]
-                result = cur.execute(f"""SELECT health, mana FROM main
-                                                       WHERE player_id = {owner}""").fetchall()[0]
+                result = list(cur.execute(f"""SELECT health, mana FROM main
+                                                       WHERE player_id = {owner}""").fetchall()[0])
                 translate = {"картошка":"potato",
                              "репка":"turnip",
                              "зелье маны":"mana_potion",
