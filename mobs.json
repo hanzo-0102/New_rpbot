@@ -29,9 +29,9 @@
         "effect": "poison"
       },
       {
-        "name": "ослепляющий камень",
+        "name": "огненный камень",
         "dmg": 0,
-        "effect": "run"
+        "effect": "fire"
       }
     ],
     "drop": {
@@ -39,6 +39,42 @@
       "50": "copper_coin",
       "49": "copper_coin",
       "48": "copper_coin"
+    }
+  },
+  "snow_giant": {
+    "name": "Снежный великан",
+    "health": 42,
+    "attack": [
+      {
+        "name": "топот",
+        "dmg": 8,
+        "effect": ""
+      },
+      {
+        "name": "морозное дыхание",
+        "dmg": 4,
+        "effect": "stun"
+      },
+      {
+        "name": "топот",
+        "dmg": 8,
+        "effect": ""
+      },
+      {
+        "name": "морозное дыхание",
+        "dmg": 4,
+        "effect": "stun"
+      },
+      {
+        "name": "удар зубочисткой гиганта",
+        "dmg": 12,
+        "effect": "poison"
+      }
+    ],
+    "drop": {
+      "43": "copper_coin",
+      "42": "copper_coin",
+      "2": "wolf_dagger"
     }
   }
 }

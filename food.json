@@ -13,5 +13,10 @@
     "name": "зелье маны",
     "health_plus": 0,
     "mana_plus": 4
+  },
+  "yellow_alcohol_drink": {
+    "name": "светло-жёлтый алкогольный напиток",
+    "health_plus": 3,
+    "mana_plus": 7
   }
 }

@@ -244,7 +244,7 @@ def main():
                 result = cur.execute(f"""SELECT wolf_fur, wolf_fang, common_training_sword,
                  mana_potion, bow, arrow, ruby, copper_coin, silver_coin, gold_coin, equiped_weapon,
                   equiped_helmet, equiped_chestplate, eqiped_leggings, equiped_boots, jigsaw, mace, stuff,
-                  magic_stuff, wolf_dugger, stuff_of_dwarfs_god, potato, turnip FROM main
+                  magic_stuff, wolf_dagger, stuff_of_dwarfs_god, potato, turnip, yellow_alcohol_drink FROM main
                             WHERE player_id = {owner}""").fetchall()[0]
                 wolf_fur = result[0]
                 wolf_fang = result[1]
@@ -269,6 +269,7 @@ def main():
                 stuff_of_dwarfs_god = result[20]
                 potato = result[21]
                 turnip = result[22]
+                yellow_alcohol_drink = result[23]
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"На Вас надето : {equiped_helmet}, {equiped_chestplate},"
                                          f"{equiped_leggings}, {equiped_boots}\n"
@@ -287,6 +288,8 @@ def main():
                                          if stuff_of_dwarfs_god != 0 else ''}\n"""
                                          f"""{f'{common_training_sword} обычный меч для тренировок'
                                          if common_training_sword != 0 else ''}\n"""
+                                         f"""{f'{yellow_alcohol_drink} светло-жёлтый алкогольный напиток'
+                                         if yellow_alcohol_drink != 0 else ''}\n"""
                                          f"{f'{potato} картошка' if potato != 0 else ''}\n"
                                          f"{f'{turnip} репка' if turnip != 0 else ''}\n"
                                          f"{f'{mana_potion} зелье маны' if mana_potion != 0 else ''}\n"
@@ -529,7 +532,7 @@ def main():
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=f"А от кого сбегать то ?",
                                      random_id=random.randint(0, 2 ** 64))
-            elif text in ['картошка', 'репка', 'зелье маны']:
+            elif text in ['картошка', 'репка', 'зелье маны', 'светло-жёлтый алкогольный напиток']:
                 owner = event.obj.message['from_id']
                 mode = cur.execute(f"""SELECT mode FROM main
                                                        WHERE player_id = {owner}""").fetchall()[0][0]
@@ -537,7 +540,8 @@ def main():
                                                        WHERE player_id = {owner}""").fetchall()[0]
                 translate = {"картошка":"potato",
                              "репка":"turnip",
-                             "зелье маны":"mana_potion"}
+                             "зелье маны":"mana_potion",
+                             "светло-жёлтый алкогольный напиток":"yellow_alcohol_drink"}
                 command = f"SELECT {translate[text]} FROM main WHERE player_id = {owner}"
                 if cur.execute(command).fetchall()[0][0]:
                     result[0] += food[translate[text]]['health_plus']

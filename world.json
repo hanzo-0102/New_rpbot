@@ -34,11 +34,29 @@
   },
   "mahchap": {
     "name": "город Махчап",
-    "mob_spawn": false,
+    "mob_spawn": true,
     "npc_spawn": true,
-    "mob_list": [],
+    "mob_list": ["thief"],
     "npc_list": ["villager"],
-    "paths": ["spawn"],
+    "paths": ["forest1", "umchark"],
     "locations": ["mah_centre", "mah_market"]
+  },
+  "umchark": {
+    "name": "деревня Умчарк",
+    "mob_spawn": false,
+    "npc_spawn": false,
+    "mob_list": [],
+    "npc_list": [],
+    "pahts": ["mahchap", "mountain1"],
+    "locations": ["um_church"]
+  },
+  "mountain1": {
+    "name": "гора Драгсар",
+    "mob_spawn": true,
+    "npc_spawn": false,
+    "mob_list": ["snow_giant"],
+    "npc_list": [],
+    "pahts": ["mahchap", "spawn"],
+    "locations": ["top"]
   }
 }

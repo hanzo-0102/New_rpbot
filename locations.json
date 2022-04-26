@@ -152,5 +152,32 @@
         }
       ]
     }
+  },
+  "um_church": {
+    "name": "Умчаркская червизианская церковь",
+    "trade": true,
+    "trade_list": {
+      "0": [
+        {
+          "give": "ruby",
+          "give_count": 24,
+          "got": "yellow_alcohol_drink",
+          "got_count": 1
+        }
+      ],
+      "5": [
+        {
+          "give": "magic_stuff",
+          "give_count": 2,
+          "got": "stuff_of_dwarfs_god",
+          "got_count": 1
+        }
+      ]
+    }
+  },
+  "top": {
+    "name": "вершина горы Драгсар",
+    "trade": false,
+    "trade_list": {}
   }
 }
