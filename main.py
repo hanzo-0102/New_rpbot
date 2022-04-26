@@ -58,7 +58,25 @@ def main():
                                                  random_id=random.randint(0, 2 ** 64))
                         elif dialogue[curr]['type'].split()[0] == 'command':
                             if dialogue[curr]['type'].split()[1:] == ['battle']:
-                                pass
+                                owner = event.obj.message['from_id']
+                                result = cur.execute(f"""SELECT world, location FROM main
+                                                         WHERE player_id = {owner}""").fetchall()
+                                x = len(world[result[0][0]]['mob_list'])
+                                queue = world[result[0][0]]['mob_list'][random.randint(0, x)]
+                                queue = f"{queue}-{mobs[queue]['health']}"
+                                cur.execute(f"""UPDATE main
+                                                SET queue = ?
+                                                WHERE player_id = ?""",
+                                            (queue, owner))
+                                con.commit()
+                                cur.execute(f"""UPDATE main
+                                                SET mode = ?
+                                                WHERE player_id = ?""",
+                                            ('battle', owner))
+                                con.commit()
+                                vk.messages.send(user_id=event.obj.message['from_id'],
+                                                 message=f"На Вас напал/напали {queue}",
+                                                 random_id=random.randint(0, 2 ** 64))
                             elif dialogue[curr]['type'].split()[1:] == ['take']:
                                 cur.execute(f"""UPDATE main
                                                 SET {dialogue[curr]['execute'].split()[0]} = {dialogue[curr]['execute'].split()[-1]}
