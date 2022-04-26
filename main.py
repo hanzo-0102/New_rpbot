@@ -402,7 +402,7 @@ def main():
                             if world[result[0][0]]['mob_spawn']:
                                 chance = random.randint(0, 100)
                                 if chance >= 50:
-                                    x = len(world[result[0][0]]['mob_list'])
+                                    x = len(world[result[0][0]]['mob_list']) - 1
                                     queue = world[result[0][0]]['mob_list'][random.randint(0, x)]
                                     queue = f"{queue}-{mobs[queue]['health']}"
                                     cur.execute(f"""UPDATE main
