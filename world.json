@@ -5,7 +5,7 @@
     "npc_spawn" : false,
     "mob_list" : [],
     "npc_list" : [],
-    "paths" : ["forest1", "village", "Umchark"],
+    "paths" : ["forest1", "village", "Umchark", "Mahchap", "Bor"],
     "locations" : ["magicshopspawn", "weaponshopspawn", "tavernspawn"]
   },
   "forest1" : {
@@ -61,5 +61,14 @@
     "npc_list": ["villager"],
     "paths": ["Bor"],
     "locations": ["Ingilian_Komwin_church", "Ing_sacrifistic_street"]
+  },
+  "Howeg": {
+    "name": "гора Ховег",
+    "mob_spawn": false,
+    "npc_spawn": false,
+    "mob_list": [],
+    "npc_list": [],
+    "paths": ["Ingilia"],
+    "location": ["FlowerField"]
   }
 }

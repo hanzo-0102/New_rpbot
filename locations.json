@@ -70,7 +70,8 @@
   "mah_market": {
     "name": "Махчапский рынок",
     "trade": false,
-    "trade_list": {}
+    "trade_list": {
+    }
   },
   "weaponshopspawn" : {
     "name" : "кузня старого мастера Килвара",
@@ -194,6 +195,13 @@
   },
   "Ing_sacrifistic_street": {
     "name": "Ингилийская улица религиозных жертвоприношений",
+    "trade": false,
+    "trade_list": {
+    },
+    "magic_potential": 1.474
+  },
+  "FlowerField": {
+    "name": "Цветочное поле горы Ховег",
     "trade": false,
     "trade_list": {
     },
