@@ -184,5 +184,19 @@
     "trade_list": {
     },
     "magic_potential": 1.474
+  },
+  "Ingilian_Komwin_church": {
+    "name": "Ингилийская комвинская церковь",
+    "trade": false,
+    "trade_list": {
+    },
+    "magic_potential": 75.174
+  },
+  "Ing_sacrifistic_street": {
+    "name": "Ингилийская улица религиозных жертвоприношений",
+    "trade": false,
+    "trade_list": {
+    },
+    "magic_potential": 1.474
   }
 }
