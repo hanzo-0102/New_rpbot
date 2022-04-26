@@ -1,40 +1,44 @@
 {
-  "wolf" : {
-    "name" : "Волк",
-    "health" : 10,
-    "attack" : [{
-        "name" : "укус",
-        "dmg" : 2,
-        "effect" : ""
+  "wolf": {
+    "name": "Волк",
+    "health": 10,
+    "attack": [
+      {
+        "name": "укус",
+        "dmg": 2,
+        "effect": ""
       },
       {
-        "name" : "опрокидывание",
-        "dmg" : 3,
-        "effect" : "stun"
-      }],
-    "drop" : {
-      "90" : "wolf_fur",
-      "9" : "wolf_fang"
+        "name": "опрокидывание",
+        "dmg": 3,
+        "effect": "stun"
+      }
+    ],
+    "drop": {
+      "90": "wolf_fur",
+      "9": "wolf_fang"
     }
   },
-  "thief" : {
-    "name" : "Вор",
-    "health" : 15,
-    "attack" : [{
-        "name" : "отравленный нож",
-        "dmg" : 1,
-        "effect" : "poison"
+  "thief": {
+    "name": "Вор",
+    "health": 15,
+    "attack": [
+      {
+        "name": "отравленный нож",
+        "dmg": 1,
+        "effect": "poison"
       },
       {
-        "name" : "ослепляющий камень",
-        "dmg" : 0,
-        "effect" : "run"
-      }],
-    "drop" : {
-      "51" : "copper_coin",
-      "50" : "copper_coin",
-      "49" : "copper_coin",
-      "48" : "copper_coin"
+        "name": "ослепляющий камень",
+        "dmg": 0,
+        "effect": "run"
+      }
+    ],
+    "drop": {
+      "51": "copper_coin",
+      "50": "copper_coin",
+      "49": "copper_coin",
+      "48": "copper_coin"
     }
   }
 }

@@ -1,0 +1,17 @@
+{
+  "potato": {
+    "name": "картошка",
+    "health_plus": 3,
+    "mana_plus": 2
+  },
+  "turnip": {
+    "name": "репка",
+    "health_plus": 5,
+    "mana_plus": 0
+  },
+  "mana_potion": {
+    "name": "зелье маны",
+    "health_plus": 0,
+    "mana_plus": 4
+  }
+}

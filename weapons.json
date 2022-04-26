@@ -1,14 +1,152 @@
 {
-  "fist" : {
-    "name" : "кулак",
-    "dmg" : [1, 1, 1, 2],
-    "effect" : [],
-    "need" : {"STR": 0, "CON": 0, "DEX": 0, "WIS": 0, "INT": 0, "CHA": 0}
+  "fist": {
+    "name": "кулак",
+    "dmg": [
+      1,
+      1,
+      1,
+      2
+    ],
+    "effect": [],
+    "need": {
+      "STR": 0,
+      "CON": 0,
+      "DEX": 0,
+      "WIS": 0,
+      "INT": 0,
+      "CHA": 0
+    }
   },
-  "common_training_sword" : {
-    "name" : "обычный меч для тренировок",
-    "dmg" : [999, 999, 999],
-    "effect" : ["fire", "poison", "stun", "heal"],
-    "need" : {"STR": 6, "CON": 0, "DEX": 2, "WIS": 0, "INT": 0, "CHA": 0}
+  "common_training_sword": {
+    "name": "обычный меч для тренировок",
+    "dmg": [
+      3,
+      2,
+      0
+    ],
+    "effect": [
+      "fire",
+      "poison",
+      "stun",
+      "heal"
+    ],
+    "need": {
+      "STR": 6,
+      "CON": 1,
+      "DEX": 2,
+      "WIS": 0,
+      "INT": 0,
+      "CHA": 0
+    }
+  },
+  "jigsaw": {
+    "name": "сабля",
+    "dmg": [
+      2,
+      1,
+      2
+    ],
+    "effect": [
+      "posion"
+    ],
+    "need": {
+      "STR": 1,
+      "CON": 0,
+      "DEX": 4,
+      "WIS": 0,
+      "INT": 0,
+      "CHA": 0
+    }
+  },
+  "mace": {
+    "name": "булава",
+    "dmg": [
+      5,
+      3
+    ],
+    "effect": [],
+    "need": {
+      "STR": 4,
+      "CON": 2,
+      "DEX": 2,
+      "WIS": 0,
+      "INT": 0,
+      "CHA": 0
+    }
+  },
+  "stuff": {
+    "name": "боевой посох",
+    "dmg": [
+      4,
+      2
+    ],
+    "effect": [],
+    "need": {
+      "STR": 0,
+      "CON": 0,
+      "DEX": 5,
+      "WIS": 0,
+      "INT": 1,
+      "CHA": 0
+    }
+  },
+  "wolf_dagger": {
+    "name": "кинжал из клыка вождя волков Белого клыка",
+    "dmg": [
+      11,
+      10,
+      12,
+      13
+    ],
+    "effect": [
+      "heal"
+    ],
+    "need": {
+      "STR": 3,
+      "CON": 3,
+      "DEX": 6,
+      "WIS": 0,
+      "INT": 0,
+      "CHA": 0
+    }
+  },
+  "magic_stuff": {
+    "name": "волшебный посох уровня начинающий",
+    "dmg": [
+      3,
+      2
+    ],
+    "effect": [
+      "fire"
+    ],
+    "need": {
+      "STR": 0,
+      "CON": 1,
+      "DEX": 0,
+      "WIS": 2,
+      "INT": 3,
+      "CHA": 0
+    },
+    "mana_cost": 1
+  },
+  "stuff_of_dwarfs_god": {
+    "name": "посох бога дварфов Берфестокто",
+    "dmg": [
+      20,
+      3
+    ],
+    "effect": [
+      "fire",
+      "poison"
+    ],
+    "need": {
+      "STR": 0,
+      "CON": 4,
+      "DEX": 0,
+      "WIS": 8,
+      "INT": 9,
+      "CHA": 2
+    },
+    "mana_cost": 5
   }
 }
