@@ -61,6 +61,17 @@
     "trade_list": {
     }
   },
+  "mah_centre": {
+    "name": "Центральная площадь города Махчап",
+    "trade": false,
+    "trade_list": {
+    }
+  },
+  "mah_market": {
+    "name": "Махчапский рынок",
+    "trade": false,
+    "trade_list": {}
+  },
   "weaponshopspawn" : {
     "name" : "кузня старого мастера Килвара",
     "trade" : true,
@@ -139,5 +150,39 @@
     "trade" : false,
     "trade_list" : {
     }
+  },
+  "um_church": {
+    "name": "Умчаркская червизианская церковь",
+    "trade": false,
+    "trade_list": {
+    }
+  },
+  "Bor_centre": {
+    "name": "Центральная площадь города Бор",
+    "trade": false,
+    "trade_list": {
+    },
+    "magic_potential": 1.474
+  },
+  "Bor_nat_park": {
+    "name": "Национальный парк города Бор",
+    "trade": false,
+    "trade_list": {
+    },
+    "magic_potential": 1.474
+  },
+  "Bor_magic_history_nat_museum": {
+    "name": "Борский национальный музей истории магии",
+    "trade": false,
+    "trade_list": {
+    },
+    "magic_potential": 1.474
+  },
+  "Bor_magic_garden": {
+    "name": "Борский магический сад",
+    "trade": false,
+    "trade_list": {
+    },
+    "magic_potential": 1.474
   }
 }

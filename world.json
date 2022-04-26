@@ -5,7 +5,7 @@
     "npc_spawn" : false,
     "mob_list" : [],
     "npc_list" : [],
-    "paths" : ["forest1", "village"],
+    "paths" : ["forest1", "village", "Umchark"],
     "locations" : ["magicshopspawn", "weaponshopspawn", "tavernspawn"]
   },
   "forest1" : {
@@ -19,11 +19,38 @@
   },
   "village": {
     "name": "Село",
+    "mob_spawn": true,
+    "npc_spawn": true,
+    "mob_list": ["thief"],
+    "npc_list": ["villager"],
+    "paths": ["spawn"],
+    "locations": ["?", "chapel"]
+  },
+  "Mahchap": {
+    "name": "город Махчап",
     "mob_spawn": false,
     "npc_spawn": true,
     "mob_list": [],
     "npc_list": ["villager"],
     "paths": ["spawn"],
-    "locations": ["?", "chapel"]
+    "locations": ["mah_centre", "mah_market"]
+  },
+  "Umchark": {
+    "name": "деревня Умчарк",
+    "mob_spawn": true,
+    "npc_spawn": true,
+    "mob_list": [],
+    "npc_list": ["villager"],
+    "pahts": ["spawn", "village"],
+    "locations": ["um_church"]
+  },
+  "Bor": {
+    "name": "Город Бор",
+    "mob_spawn": false,
+    "npc_spawn": true,
+    "mob_list": [],
+    "npc_list": ["villager"],
+    "paths": ["spawn"],
+    "locations": ["Bor_centre", "Bor_nat_park", "Bor_magic_history_nat_museum", "Bor_magic_garden"]
   }
 }
