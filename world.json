@@ -25,7 +25,8 @@
       "thief"
     ],
     "paths": [
-      "spawn", "mahchap"
+      "spawn",
+      "mahchap"
     ],
     "locations": [
       "wolfsmeadowforest1",
@@ -36,10 +37,20 @@
     "name": "город Махчап",
     "mob_spawn": true,
     "npc_spawn": true,
-    "mob_list": ["thief"],
-    "npc_list": ["villager"],
-    "paths": ["forest1", "umchark"],
-    "locations": ["mah_centre", "mah_market"]
+    "mob_list": [
+      "thief"
+    ],
+    "npc_list": [
+      "villager"
+    ],
+    "paths": [
+      "forest1",
+      "umchark"
+    ],
+    "locations": [
+      "mah_centre",
+      "mah_market"
+    ]
   },
   "umchark": {
     "name": "деревня Умчарк",
@@ -47,16 +58,28 @@
     "npc_spawn": false,
     "mob_list": [],
     "npc_list": [],
-    "paths": ["mahchap", "mountain1"],
-    "locations": ["um_church"]
+    "paths": [
+      "mahchap",
+      "mountain1"
+    ],
+    "locations": [
+      "um_church"
+    ]
   },
   "mountain1": {
     "name": "гора Драгсар",
     "mob_spawn": true,
     "npc_spawn": false,
-    "mob_list": ["snow_giant"],
+    "mob_list": [
+      "snow_giant"
+    ],
     "npc_list": [],
-    "paths": ["mahchap", "spawn"],
-    "locations": ["top"]
+    "paths": [
+      "mahchap",
+      "spawn"
+    ],
+    "locations": [
+      "top"
+    ]
   }
 }
