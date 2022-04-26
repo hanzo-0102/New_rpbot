@@ -2,6 +2,7 @@ import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
 import datetime
+import pymorphy2
 import sqlite3
 import json
 from secrets import TOKEN, group_id
@@ -231,9 +232,12 @@ def main():
                 owner = event.obj.message['from_id']
                 result = cur.execute(f"""SELECT world, location FROM main
                             WHERE player_id = {owner}""").fetchall()
+                morph = pymorphy2.MorphAnalyzer()
+                word = morph.parse(locations[result[0][1]]['name'])[0]
+                word = word.inflect({'loct'})[0]
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
-                                         f" {locations[result[0][1]]['name']}",
+                                         f" {word}",
                                  random_id=random.randint(0, 2 ** 64))
             elif text == 'уровень':
                 owner = event.obj.message['from_id']
@@ -327,9 +331,12 @@ def main():
                         result = cur.execute(f"""SELECT world, location FROM main
                                                     WHERE player_id = {owner}""").fetchall()
                         mobs = cur.execute(f"""SELECT Name FROM Mobs WHERE World = ?""", (to1,)).fetchall()
+                        morph = pymorphy2.MorphAnalyzer()
+                        word = morph.parse(locations[result[0][1]]['name'])[0]
+                        word = word.inflect({'loct'})[0]
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=f"Вы находитесь в {world[result[0][0]]['name']}. А если быть точнее то в"
-                                                 f" {locations[result[0][1]]['name']}, Вы можете поговорить с любым из:\n",
+                                                 f" {word}, Вы можете поговорить с любым из:\n",
                                          random_id=random.randint(0, 2 ** 64))
                         message = ''
                         for i in mobs:
