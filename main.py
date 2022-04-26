@@ -553,6 +553,9 @@ def main():
                     command = f"UPDATE main SET {translate[text]} = {translate[text]} - 1 WHERE player_id = {owner}"
                     cur.execute(command)
                     con.commit()
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=f"Вы съели {text}",
+                                     random_id=random.randint(0, 2 ** 64))
                     if mode == 'battle':
                         dmg = 0
                         armor = 0
