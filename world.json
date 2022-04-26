@@ -47,7 +47,7 @@
     "npc_spawn": false,
     "mob_list": [],
     "npc_list": [],
-    "pahts": ["mahchap", "mountain1"],
+    "paths": ["mahchap", "mountain1"],
     "locations": ["um_church"]
   },
   "mountain1": {
@@ -56,7 +56,7 @@
     "npc_spawn": false,
     "mob_list": ["snow_giant"],
     "npc_list": [],
-    "pahts": ["mahchap", "spawn"],
+    "paths": ["mahchap", "spawn"],
     "locations": ["top"]
   }
 }
