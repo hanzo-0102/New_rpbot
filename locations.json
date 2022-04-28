@@ -179,5 +179,107 @@
     "name": "вершина горы Драгсар",
     "trade": false,
     "trade_list": {}
+  },
+  "old_stone": {
+    "name": "странный камень",
+    "trade": false,
+    "trade_list": {
+    }
+  },
+  "guild": {
+    "name": "Гильдия",
+    "trade": true,
+    "trade_list": {
+      "0": [
+        {
+          "give": "wolf_fur",
+          "give_count": 12,
+          "got": "wolf_chestplate",
+          "got_count": 1
+        },
+        {
+          "give": "wolf_fur",
+          "give_count": 12,
+          "got": "wolf_helmet",
+          "got_count": 1
+        },
+        {
+          "give": "wolf_fur",
+          "give_count": 12,
+          "got": "wolf_boots",
+          "got_count": 1
+        },
+        {
+          "give": "wolf_fur",
+          "give_count": 12,
+          "got": "wolf_leggings",
+          "got_count": 1
+        }
+      ],
+      "10": [
+        {
+          "give": "dragon_scales",
+          "give_count": 5,
+          "got": "dragon_chestplate",
+          "got_count": 1
+        },
+        {
+          "give": "dragon_scales",
+          "give_count": 5,
+          "got": "dragon_helmet",
+          "got_count": 1
+        },
+        {
+          "give": "dragon_scales",
+          "give_count": 5,
+          "got": "dragon_boots",
+          "got_count": 1
+        },
+        {
+          "give": "dragon_scales",
+          "give_count": 5,
+          "got": "dragon_leggings",
+          "got_count": 1
+        }
+      ]
+    }
+  },
+  "dragon_cave": {
+    "name": "пещера Шимада",
+    "trade": false,
+    "trade_list": {
+    }
+  },
+  "white_fang_cave": {
+    "name": "пещера Белого клыка",
+    "trade": false,
+    "trade_list": {
+    }
+  },
+  "nubirs_house": {
+    "name": "дом Нубира",
+    "trade": true,
+    "trade_list": {
+      "0": [
+        {
+          "give": "dragon_scales",
+          "give_count": 1,
+          "got": "ruby",
+          "got_count": 2
+        }
+      ]
+    }
+  },
+  "main_square": {
+    "name": "фонтанная площадь",
+    "trade": false,
+    "trade_list": {
+    }
+  },
+  "dragon_field": {
+    "name": "поле пепла",
+    "trade": false,
+    "trade_list": {
+    }
   }
 }

@@ -76,5 +76,58 @@
       "42": "copper_coin",
       "2": "wolf_dagger"
     }
+  },
+  "white_fang": {
+    "name": "Белый клык",
+    "health": 20,
+    "attack": [
+      {
+        "name": "укус",
+        "dmg": 4,
+        "effect": ""
+      },
+      {
+        "name": "опрокидывание",
+        "dmg": 6,
+        "effect": "stun"
+      },
+      {
+        "name": "рык",
+        "dmg": 0,
+        "effect": "new_wolf"
+      }
+    ],
+    "drop": {
+      "101": "wolf_fur",
+      "18": "wolf_fang"
+    }
+  },
+  "dragon": {
+    "name": "Дракон",
+    "health": 200,
+    "attack": [
+      {
+        "name": "когти",
+        "dmg": 10,
+        "effect": ""
+      },
+      {
+        "name": "удар хвостом",
+        "dmg": 30,
+        "effect": "stun"
+      },
+      {
+        "name": "огненное дыхание",
+        "dmg": 25,
+        "effect": "fire"
+      }
+    ],
+    "drop": {
+      "101": "dragon_scales",
+      "80": "dragon_scales",
+      "40": "dragon_scales",
+      "10": "dragon_scales",
+      "1": "dragon_scales"
+    }
   }
 }

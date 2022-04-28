@@ -60,10 +60,28 @@
     "npc_list": [],
     "paths": [
       "mahchap",
-      "mountain1"
+      "mountain1",
+      "forest2"
     ],
     "locations": [
       "um_church"
+    ]
+  },
+  "forest2": {
+    "name": "Чаща",
+    "mob_spawn": true,
+    "npc_spawn": false,
+    "mob_list": [
+      "wolf"
+    ],
+    "npc_list": [],
+    "paths": [
+      "umchark",
+      "egalliv"
+    ],
+    "locations": [
+      "old_stone",
+      "guild"
     ]
   },
   "mountain1": {
@@ -71,15 +89,48 @@
     "mob_spawn": true,
     "npc_spawn": false,
     "mob_list": [
-      "snow_giant"
+      "snow_giant",
+      "wolf"
     ],
     "npc_list": [],
     "paths": [
-      "mahchap",
+      "umchark",
       "spawn"
     ],
     "locations": [
-      "top"
+      "top",
+      "dragon_cave",
+      "white_fang_cave"
+    ]
+  },
+  "egalliv": {
+    "name": "деревня Янверед",
+    "mob_spawn": false,
+    "npc_spawn": false,
+    "mob_list": [],
+    "npc_list": [],
+    "paths": [
+      "forest2",
+      "dragon_field"
+    ],
+    "locations": [
+      "main_square",
+      "nubirs_house"
+    ]
+  },
+  "dragon_field": {
+    "name": "сожжёные поля",
+    "mob_spawn": true,
+    "npc_spawn": false,
+    "mob_list": [
+      "dragon"
+    ],
+    "npc_list": [],
+    "paths": [
+      "egalliv"
+    ],
+    "locations": [
+      "dragon_field"
     ]
   }
 }
