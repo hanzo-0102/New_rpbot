@@ -78,7 +78,9 @@ def main():
                                          message=f"Орк : +2 к СИЛЕ, +1 к ВЫНОСЛИВОСТИ, -2 к ХАРИЗМЕ, -1 к ИНТЕЛЛЕКТУ\n"
                                                  f"Дварф : +2 к ВЫНОСЛИВОСТИ, -1 к ХАРИЗМЕ, -1 к ЛОВКОСТИ\n"
                                                  f"Человек : никаких бонусов или минусов... жалкие людишки :)\n"
-                                                 f"Эльф : +1 к ЛОВКОСТИ, +1 к ИНТЕЛЛЕКТУ, -2 к ВЫНОСЛИВОСТИ",
+                                                 f"Эльф : +1 к ЛОВКОСТИ, +1 к ИНТЕЛЛЕКТУ, -2 к ВЫНОСЛИВОСТИ\n"
+                                                 f"Драконолюд : +1 к ЛОВКОСТИ, -1 к ХАРИЗМЕ\n"
+                                                 f"Фея : -2 к ВЫНОСЛИВОСТИ, +2 к ЛОВКОСТИ",
                                          random_id=random.randint(0, 2 ** 64))
                     elif text[1:].split()[1] == 'классы':
                         vk.messages.send(user_id=event.obj.message['from_id'],
@@ -140,6 +142,22 @@ def main():
                             "INT": 0,
                             "CHA": -1
                         },
+                        "фея": {
+                            "STR": 0,
+                            "CON": -2,
+                            "DEX": 2,
+                            "WIS": 0,
+                            "INT": 0,
+                            "CHA": 0
+                        },
+                        "драконолюд": {
+                            "STR": 0,
+                            "CON": 0,
+                            "DEX": 1,
+                            "WIS": 0,
+                            "INT": 0,
+                            "CHA": -1
+                        },
                         "дварф": {
                             "STR": 2,
                             "CON": 2,
@@ -176,7 +194,7 @@ def main():
                          queue, quests, jigsaw, mace, stuff, wolf_dagger, magic_stuff,
                          stuff_of_dwarfs_god, turnip, potato, yellow_alcohol_drink, wolf_chestplate,
                          wolf_leggings, wolf_boots, wolf_helmet, dragon_chestplate, dragon_leggings,
-                         dragon_boots, dragon_helmet, dragon_scales) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                         dragon_boots, dragon_helmet, dragon_scales, CLASS) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
                          ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,  
                          ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (int(event.obj.message['from_id']),
                                                                                     1, 0, 2 * max(1, races[
@@ -214,7 +232,8 @@ def main():
                                                                                     '', 'spawn',
                                                                                     'tavernspawn', 0, 'idle', '',
                                                                                     'story0', 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                                                    0, 0, 0, 0, 0, 0, 0, 0, 0))
+                                                                                    0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                                                    info[3].lower()))
                         con.commit()
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=f"Создан персонаж 1 уровня. Имя : {info[1]}\n"
