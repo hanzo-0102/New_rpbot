@@ -184,7 +184,8 @@ def main():
                         }
                     }
                     if info[2].lower() in ['орк', 'дварф', 'человек', 'эльф'] and info[3].lower() in ['воин', 'чародей',
-                                                                                                      'шаман', 'варвар']:
+                                                                                                      'шаман',
+                                                                                                      'варвар']:
                         cur.execute(f'''INSERT INTO main(player_id,
                         level, experience, health, mana, STR, DEX, WIS, CON, INT, CHA,
                         RACE, wolf_fur, wolf_fang, common_training_sword, mana_potion,
@@ -197,43 +198,43 @@ def main():
                          dragon_boots, dragon_helmet, dragon_scales, CLASS) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
                          ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,  
                          ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (int(event.obj.message['from_id']),
-                                                                                    1, 0, 2 * max(1, races[
+                                                                           1, 0, 2 * max(1, races[
                             info[2].lower()]['CON'] + classes[info[3].lower()]['CON']),
-                                                                                    2 * max(1, races[info[2].lower()][
-                                                                                        'WIS'] +
-                                                                                            classes[info[3].lower()][
-                                                                                                'WIS']),
-                                                                                    max(1,
-                                                                                        races[info[2].lower()]['STR'] +
-                                                                                        classes[info[3].lower()][
-                                                                                            'STR']),
-                                                                                    max(1,
-                                                                                        races[info[2].lower()]['DEX'] +
-                                                                                        classes[info[3].lower()][
-                                                                                            'DEX']),
-                                                                                    max(1,
-                                                                                        races[info[2].lower()]['WIS'] +
-                                                                                        classes[info[3].lower()][
-                                                                                            'WIS']),
-                                                                                    max(1,
-                                                                                        races[info[2].lower()]['CON'] +
-                                                                                        classes[info[3].lower()][
-                                                                                            'CON']),
-                                                                                    max(1,
-                                                                                        races[info[2].lower()]['INT'] +
-                                                                                        classes[info[3].lower()][
-                                                                                            'INT']),
-                                                                                    max(1,
-                                                                                        races[info[2].lower()]['CHA'] +
-                                                                                        classes[info[3].lower()][
-                                                                                            'CHA']),
-                                                                                    info[2].lower(), 0, 0, 0, 0, 0, 0,
-                                                                                    0, 0, 0, 0, info[1], '', '', '', '',
-                                                                                    '', 'spawn',
-                                                                                    'tavernspawn', 0, 'idle', '',
-                                                                                    'story0', 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                                                    0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                                                    info[3].lower()))
+                                                                           2 * max(1, races[info[2].lower()][
+                                                                               'WIS'] +
+                                                                                   classes[info[3].lower()][
+                                                                                       'WIS']),
+                                                                           max(1,
+                                                                               races[info[2].lower()]['STR'] +
+                                                                               classes[info[3].lower()][
+                                                                                   'STR']),
+                                                                           max(1,
+                                                                               races[info[2].lower()]['DEX'] +
+                                                                               classes[info[3].lower()][
+                                                                                   'DEX']),
+                                                                           max(1,
+                                                                               races[info[2].lower()]['WIS'] +
+                                                                               classes[info[3].lower()][
+                                                                                   'WIS']),
+                                                                           max(1,
+                                                                               races[info[2].lower()]['CON'] +
+                                                                               classes[info[3].lower()][
+                                                                                   'CON']),
+                                                                           max(1,
+                                                                               races[info[2].lower()]['INT'] +
+                                                                               classes[info[3].lower()][
+                                                                                   'INT']),
+                                                                           max(1,
+                                                                               races[info[2].lower()]['CHA'] +
+                                                                               classes[info[3].lower()][
+                                                                                   'CHA']),
+                                                                           info[2].lower(), 0, 0, 0, 0, 0, 0,
+                                                                           0, 0, 0, 0, info[1], '', '', '', '',
+                                                                           '', 'spawn',
+                                                                           'tavernspawn', 0, 'idle', '',
+                                                                           'story0', 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                                           0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                                           info[3].lower()))
                         con.commit()
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=f"Создан персонаж 1 уровня. Имя : {info[1]}\n"
@@ -591,8 +592,8 @@ def main():
                 for i in result:
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=f"Название : {quests[i]['name']}\n"
-                                            f"Описание : {quests[i]['text']}\n"
-                                            f"Цель : {quests[i]['target']}",
+                                             f"Описание : {quests[i]['text']}\n"
+                                             f"Цель : {quests[i]['target']}",
                                      random_id=random.randint(0, 2 ** 64))
             elif text.split()[0] == "торговать":
                 totrade = int(text.split()[1])
@@ -628,7 +629,7 @@ def main():
                                         vk.messages.send(user_id=event.obj.message['from_id'],
                                                          message="Сделка прошла успешно !",
                                                          random_id=random.randint(0, 2 ** 64))
-                                    else :
+                                    else:
                                         vk.messages.send(user_id=event.obj.message['from_id'],
                                                          message="Торговец : У тебя нет материалов, а я в благородства"
                                                                  " играть не буду...",
@@ -874,10 +875,10 @@ def main():
                                                        WHERE player_id = {owner}""").fetchall()[0][0]
                 result = list(cur.execute(f"""SELECT health, mana FROM main
                                                        WHERE player_id = {owner}""").fetchall()[0])
-                translate = {"картошка":"potato",
-                             "репка":"turnip",
-                             "зелье маны":"mana_potion",
-                             "светло-жёлтый алкогольный напиток":"yellow_alcohol_drink"}
+                translate = {"картошка": "potato",
+                             "репка": "turnip",
+                             "зелье маны": "mana_potion",
+                             "светло-жёлтый алкогольный напиток": "yellow_alcohol_drink"}
                 command = f"SELECT {translate[text]} FROM main WHERE player_id = {owner}"
                 if cur.execute(command).fetchall()[0][0]:
                     result[0] += food[translate[text]]['health_plus']
@@ -1300,7 +1301,8 @@ def main():
                             mana -= weapons[weapon]['mana_cost']
                             dmg = weapons[weapon]['dmg'][random.randint(0, len(weapons[weapon]['dmg']) - 1)]
                             try:
-                                effect = weapons[weapon]['effect'][random.randint(0, len(weapons[weapon]['effect']) - 1)]
+                                effect = weapons[weapon]['effect'][
+                                    random.randint(0, len(weapons[weapon]['effect']) - 1)]
                             except Exception:
                                 effect = ''
                             if effect == 'heal':
@@ -1312,19 +1314,22 @@ def main():
                                             (HP + random.randint(1, LVL + 1), owner))
                                 con.commit()
                             elif effect == 'posion':
-                                LVL = cur.execute(f"""SELECT level FROM main WHERE player_id = {owner}""").fetchall()[0][0]
+                                LVL = \
+                                cur.execute(f"""SELECT level FROM main WHERE player_id = {owner}""").fetchall()[0][0]
                                 vk.messages.send(user_id=event.obj.message['from_id'],
                                                  message=f"Эффект posion задействован",
                                                  random_id=random.randint(0, 2 ** 64))
                                 dmg += random.randint(0, 1) * LVL * 2
                             elif effect == 'fire':
-                                LVL = cur.execute(f"""SELECT level FROM main WHERE player_id = {owner}""").fetchall()[0][0]
+                                LVL = \
+                                cur.execute(f"""SELECT level FROM main WHERE player_id = {owner}""").fetchall()[0][0]
                                 vk.messages.send(user_id=event.obj.message['from_id'],
                                                  message=f"Эффект fire задействован",
                                                  random_id=random.randint(0, 2 ** 64))
                                 dmg += random.randint(1, LVL)
                             elif effect == 'stun':
-                                LVL = cur.execute(f"""SELECT level FROM main WHERE player_id = {owner}""").fetchall()[0][0]
+                                LVL = \
+                                cur.execute(f"""SELECT level FROM main WHERE player_id = {owner}""").fetchall()[0][0]
                                 chance = random.randint(0, 100)
                                 if chance >= 99 - LVL:
                                     vk.messages.send(user_id=event.obj.message['from_id'],
@@ -1498,12 +1503,12 @@ def main():
                 owner = event.obj.message['from_id']
                 mode = cur.execute(f"""SELECT mode FROM main
                                        WHERE player_id = {owner}""").fetchall()[0][0]
-                translate = {"обычный меч для тренировок":"common_training_sword",
-                             "кулак":"fist",
-                             "сабля":"jigsaw",
-                             "булава":"mace",
-                             "боевой посох":"stuff",
-                             "кинжал из клыка вождя волков Белого клыка":"wolf_dagger"}
+                translate = {"обычный меч для тренировок": "common_training_sword",
+                             "кулак": "fist",
+                             "сабля": "jigsaw",
+                             "булава": "mace",
+                             "боевой посох": "stuff",
+                             "кинжал из клыка вождя волков Белого клыка": "wolf_dagger"}
                 weapon = cur.execute(f"""SELECT equiped_weapon FROM main
                                                                 WHERE player_id = {owner}""").fetchall()[0][0]
                 if translate[text]:
@@ -1526,8 +1531,8 @@ def main():
                             if have:
                                 requirements = weapons[translate[text]]['need']
                                 if (STR >= requirements['STR'] and WIS >= requirements['WIS'] and
-                                    DEX >= requirements['DEX'] and INT >= requirements['INT'] and
-                                    CHA >= requirements['CHA'] and CON >= requirements['CON']):
+                                        DEX >= requirements['DEX'] and INT >= requirements['INT'] and
+                                        CHA >= requirements['CHA'] and CON >= requirements['CON']):
                                     cur.execute(f"""UPDATE main
                                                     SET equiped_weapon = ?
                                                     WHERE player_id = ?""", (translate[text], owner))
@@ -1574,7 +1579,7 @@ def main():
                             effect = weapons[weapon]['effect'][random.randint(0, len(weapons[weapon]['effect']) - 1)]
                         except Exception:
                             effect = ''
-                        if effect == 'heal' :
+                        if effect == 'heal':
                             HP, LVL = cur.execute(f"""SELECT health, level FROM main
                                                             WHERE player_id = {owner}""").fetchall()[0][0]
                             cur.execute(f"""UPDATE main
