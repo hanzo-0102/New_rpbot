@@ -233,7 +233,7 @@ def main():
                                                                            '', 'spawn',
                                                                            'tavernspawn', 0, 'idle', '',
                                                                            'story0', 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                                           0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                                                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                                                            info[3].lower()))
                         con.commit()
                         vk.messages.send(user_id=event.obj.message['from_id'],
